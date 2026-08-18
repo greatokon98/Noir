@@ -163,8 +163,53 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong on our side.');
 });
 
-// --- Schema init (idempotent — runs on all environments) ---------------------
-ensureSchema().catch((err) => {
+// --- Schema init + auto-seed (idempotent — runs on all environments) ----------
+ensureSchema().then(async () => {
+  try {
+    const { get, run } = require('./db');
+    const bcrypt = require('bcryptjs');
+    const existing = await get('SELECT id FROM admins LIMIT 1');
+    if (existing) return;
+    console.log('No admin found — seeding default data...');
+    const adminEmail = process.env.ADMIN_EMAIL || 'owner@noirclub.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'noir2026';
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
+    await run(
+      `INSERT INTO admins (email, password_hash, name, role) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING`,
+      [adminEmail, passwordHash, 'Owner', 'owner']
+    );
+    const tiers = [
+      ['residence', 'Résidence', 295, '/ month', 'Full access, 06:00–23:00. Your programming, checked monthly.', JSON.stringify(['Full club access', 'Programming checked monthly', 'Recovery suite, standard booking']), 1, true],
+      ['signature', 'Signature', 495, '/ month', 'Full access, a weekly 1:1 session, priority recovery booking.', JSON.stringify(['Full club access, 24/7 by key card', 'One 1:1 session per week', 'Priority recovery booking', 'Quarterly nutrition review']), 2, true],
+      ['atelier', 'Atelier', null, 'By application', 'Fully bespoke. Your coach, your schedule, the room to yourself when you need it.', JSON.stringify(['Dedicated lead coach', 'Private room access on request', 'Concierge scheduling, 06:00–21:00']), 3, true]
+    ];
+    for (const t of tiers) {
+      await run(
+        `INSERT INTO membership_tiers (key, name, price_monthly, billing_label, tagline, features_json, sort_order, published)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT (key) DO NOTHING`, t
+      );
+    }
+    const settings = {
+      hero_eyebrow: 'Private fitness club — New York',
+      cta_primary_label: 'Book a private tour',
+      cta_tour_label: 'Request my tour',
+      phone: '+1 (212) 555-0130',
+      email: 'hello@noirclub.com',
+      hours_club: '06:00–23:00',
+      hours_concierge: '06:00–21:00',
+      email_alerts: 'false'
+    };
+    for (const [key, value] of Object.entries(settings)) {
+      await run(
+        `INSERT INTO site_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value`,
+        [key, value]
+      );
+    }
+    console.log('Default data seeded successfully.');
+  } catch (err) {
+    console.error('Auto-seed failed:', err.message);
+  }
+}).catch((err) => {
   console.error('Schema init failed:', err.message);
 });
 
