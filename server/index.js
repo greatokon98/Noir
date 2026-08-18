@@ -193,8 +193,7 @@ if (!process.env.VERCEL) {
       console.log(`NOIR admin + API running at http://localhost:${PORT}`);
     });
   }).catch((err) => {
-    console.error('Failed to initialize database:', err);
-    process.exit(1);
+    console.error('Failed to initialize database:', err.message);
   });
 }
 

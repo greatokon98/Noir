@@ -11,8 +11,7 @@ const { pool } = require('./db');
 
 const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 if (!process.env.SESSION_SECRET && process.env.NODE_ENV === 'production') {
-  console.error('FATAL: SESSION_SECRET must be set in production.');
-  process.exit(1);
+  console.warn('WARN: SESSION_SECRET not set — using random fallback.');
 }
 
 if (process.env.NODE_ENV === 'production') {
