@@ -1,0 +1,5 @@
+{
+  "name": "noir-club-root",
+  "private": true,
+  "installCommand": "cd noir && npm install"
+}

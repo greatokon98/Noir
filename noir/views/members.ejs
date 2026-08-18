@@ -1,0 +1,144 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+<%
+  var memberBadge = { active: 'b-ok', paused: 'b-warn', former: 'b-bad' };
+  var memberLabel = { active: 'Active', paused: 'Paused', former: 'Former' };
+%>
+
+<div class="view" data-od-id="admin-members">
+  <div class="view-head">
+    <div>
+      <h2>Members</h2>
+      <p class="view-desc">The 420, kept current by hand. Tiers resolve from Membership.</p>
+    </div>
+    <button class="btn btn-primary" type="button" data-od-id="cta-new-member" onclick="document.getElementById('member-create').hidden = !document.getElementById('member-create').hidden">Add member</button>
+  </div>
+
+  <form class="panel" id="member-create" method="post" action="/admin/members" hidden data-od-id="member-create-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="panel-head"><h3>New member</h3><span class="panel-meta">From the desk, by hand</span></div>
+    <div class="grid-2">
+      <div class="field"><label for="nm-name">Name</label><input id="nm-name" name="name" required></div>
+      <div class="field"><label for="nm-email">Email</label><input id="nm-email" name="email" type="email" required></div>
+    </div>
+    <div class="grid-3">
+      <div class="field"><label for="nm-phone">Phone</label><input id="nm-phone" name="phone" type="tel"></div>
+      <div class="field">
+        <label for="nm-tier">Tier</label>
+        <select id="nm-tier" name="tier_id">
+          <% tiers.forEach(function (t) { %>
+          <option value="<%= t.key %>"><%= t.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="nm-status">Status</label>
+        <select id="nm-status" name="status">
+          <% memberStatuses.forEach(function (s) { %>
+          <option value="<%= s %>"><%= memberLabel[s] %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label for="nm-joined">Joined</label><input id="nm-joined" name="joined_at" type="date" value="<%= new Date().toISOString().slice(0,10) %>"></div>
+      <div class="field"><label for="nm-notes">Notes</label><input id="nm-notes" name="notes"></div>
+    </div>
+    <div class="editor-actions"><span class="spacer"></span><button class="btn btn-primary" type="submit">Add member</button></div>
+  </form>
+
+  <div class="panel">
+    <div class="panel-head"><h3>Import members</h3><span class="panel-meta">CSV · name,email,phone,tier,status,joined</span></div>
+    <form method="post" action="/admin/members/import">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field">
+        <label for="import-csv">CSV rows</label>
+        <textarea id="import-csv" name="csv" style="min-height:110px" placeholder="M. Ferreira, mf@example.com, +1 (718) 555-0166, signature, active, 2026-01-28&#10;G. Antonelli, ga@example.com, +1 (212) 555-0189, residence, active, 2025-11-04"></textarea>
+        <p class="field-hint">One member per line. Tier uses the tier key (residence / signature / atelier). Existing emails are skipped.</p>
+      </div>
+      <button class="btn btn-ghost" type="submit">Import</button>
+    </form>
+  </div>
+
+  <form class="toolbar" method="get" action="/admin/members">
+    <div class="toolbar-left">
+      <input class="search" name="q" placeholder="Search name, email, phone…" value="<%= q %>" aria-label="Search members">
+      <button class="btn btn-ghost btn-sm" type="submit">Search</button>
+    </div>
+  </form>
+
+  <% if (members.length) { %>
+  <div class="panel panel-flush">
+    <div class="table-wrap" style="padding:var(--space-4)">
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Tier</th><th>Status</th><th>Joined</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% members.forEach(function (m) { %>
+          <tr>
+            <td><strong><%= m.name %></strong><div class="cell-sub"><%= m.email %><% if (m.phone) { %> · <%= m.phone %><% } %></div></td>
+            <td><%= tierNames[m.tier_id] || m.tier_id %></td>
+            <td><span class="badge <%= memberBadge[m.status] || 'b-neutral' %>"><%= memberLabel[m.status] || m.status %></span></td>
+            <td><%= m.joined_at %></td>
+            <td>
+              <div class="row-actions">
+                <details class="edit-inline">
+                  <summary class="btn btn-ghost btn-sm" style="list-style:none">Edit</summary>
+                  <form method="post" action="/admin/members/<%= m.id %>" style="margin-top:var(--space-4)">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <div class="grid-2">
+                      <div class="field"><label>Name</label><input name="name" value="<%= m.name %>" required></div>
+                      <div class="field"><label>Email</label><input name="email" type="email" value="<%= m.email %>" required></div>
+                    </div>
+                    <div class="grid-3">
+                      <div class="field"><label>Phone</label><input name="phone" type="tel" value="<%= m.phone || '' %>"></div>
+                      <div class="field">
+                        <label>Tier</label>
+                        <select name="tier_id">
+                          <% tiers.forEach(function (t) { %>
+                          <option value="<%= t.key %>"<%= m.tier_id === t.key ? ' selected' : '' %>><%= t.name %></option>
+                          <% }); %>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>Status</label>
+                        <select name="status">
+                          <% memberStatuses.forEach(function (s) { %>
+                          <option value="<%= s %>"<%= m.status === s ? ' selected' : '' %>><%= memberLabel[s] %></option>
+                          <% }); %>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="grid-2">
+                      <div class="field"><label>Joined</label><input name="joined_at" type="date" value="<%= m.joined_at %>"></div>
+                      <div class="field"><label>Notes</label><input name="notes" value="<%= m.notes || '' %>"></div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                  </form>
+                </details>
+                <form method="post" action="/admin/members/<%= m.id %>/delete" onsubmit="return confirm('Remove this member?')">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button class="btn btn-danger btn-sm" type="submit">Remove</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% } else { %>
+  <div class="empty">No members match</div>
+  <% } %>
+</div>
+
+<style>
+.edit-inline{margin:0}
+.edit-inline summary{cursor:pointer}
+.edit-inline[open] summary{margin-bottom:var(--space-2)}
+.edit-inline form{padding:var(--space-4);border:1px solid var(--border-soft);border-radius:var(--radius-md);background:var(--bg)}
+</style>
+
+<%- include('partials/foot') %>

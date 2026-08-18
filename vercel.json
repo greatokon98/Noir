@@ -1,0 +1,15 @@
+{
+  "buildCommand": null,
+  "outputDirectory": null,
+  "framework": null,
+  "installCommand": "cd noir && npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/noir/server/index.js"
+    }
+  ],
+  "includeFiles": [
+    "noir/**"
+  ]
+}

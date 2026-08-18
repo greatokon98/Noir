@@ -1,0 +1,106 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+<%
+  var badgeCls = { new: 'b-accent', contacted: 'b-warn', toured: 'b-neutral', converted: 'b-ok', declined: 'b-bad' };
+  var statusLabel = { new: 'New', contacted: 'Contacted', toured: 'Toured', converted: 'Converted', declined: 'Declined' };
+  function fmtDate(ts) {
+    if (!ts) return '—';
+    var d = new Date(ts);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+%>
+
+<div class="view" data-od-id="admin-leads">
+  <form class="toolbar" method="get" action="/admin/leads">
+    <div class="toolbar-left">
+      <a class="chip<%= filter === 'all' ? ' active' : '' %>" href="/admin/leads">All</a>
+      <% leadStatuses.forEach(function (s) { %>
+      <a class="chip<%= filter === s ? ' active' : '' %>" href="/admin/leads?status=<%= s %>"><%= statusLabel[s] %></a>
+      <% }); %>
+      <input class="search" name="q" placeholder="Search name, email, phone…" value="<%= q %>" aria-label="Search leads">
+      <button class="btn btn-ghost btn-sm" type="submit">Search</button>
+    </div>
+    <button class="btn btn-primary" type="button" data-od-id="cta-new-lead" onclick="document.getElementById('lead-create').hidden = !document.getElementById('lead-create').hidden">Add lead</button>
+  </form>
+
+  <form class="panel" id="lead-create" method="post" action="/admin/leads" hidden data-od-id="lead-create-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="panel-head"><h3>New lead</h3><span class="panel-meta">From the desk, by hand</span></div>
+    <div class="grid-2">
+      <div class="field"><label for="nl-name">Name</label><input id="nl-name" name="name" required></div>
+      <div class="field"><label for="nl-email">Email</label><input id="nl-email" name="email" type="email" required></div>
+    </div>
+    <div class="grid-3">
+      <div class="field"><label for="nl-phone">Phone</label><input id="nl-phone" name="phone" type="tel"></div>
+      <div class="field">
+        <label for="nl-time">Preferred time</label>
+        <select id="nl-time" name="preferred_time">
+          <option value="morning">Morning · 06:00–12:00</option>
+          <option value="afternoon">Afternoon · 12:00–17:00</option>
+          <option value="evening">Evening · 17:00–21:00</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="nl-status">Status</label>
+        <select id="nl-status" name="status">
+          <% leadStatuses.forEach(function (s) { %>
+          <option value="<%= s %>"><%= statusLabel[s] %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label for="nl-source">Source</label>
+      <select id="nl-source" name="source">
+        <option value="tour">Tour request</option>
+        <option value="signup">Membership signup</option>
+      </select>
+    </div>
+    <div class="field"><label for="nl-notes">Notes</label><textarea id="nl-notes" name="notes"></textarea></div>
+    <div class="editor-actions"><span class="spacer"></span><button class="btn btn-primary" type="submit">Create lead</button></div>
+  </form>
+
+  <% if (leads.length) { %>
+  <div class="panel panel-flush">
+    <div class="table-wrap" style="padding:var(--space-4)">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Phone</th><th>Preferred time</th><th>Source</th><th>Status</th><th>Received</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% leads.forEach(function (l) { %>
+          <tr>
+            <td><strong><%= l.name %></strong><div class="cell-sub"><%= l.email %></div></td>
+            <td><div class="cell-sub"><%= l.phone || '—' %></div></td>
+            <td><%= timeLabel[l.preferred_time] || l.preferred_time %></td>
+            <td><%= sourceLabel[l.source] || l.source %></td>
+            <td>
+              <form method="post" action="/admin/leads/<%= l.id %>/status" class="status-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <select class="status-sel" name="status" onchange="this.form.submit()" aria-label="Status for <%= l.name %>">
+                  <% leadStatuses.forEach(function (s) { %>
+                  <option value="<%= s %>"<%= l.status === s ? ' selected' : '' %>><%= statusLabel[s] %></option>
+                  <% }); %>
+                </select>
+              </form>
+            </td>
+            <td><%= fmtDate(l.created_at) %></td>
+            <td>
+              <form method="post" action="/admin/leads/<%= l.id %>/delete" onsubmit="return confirm('Delete this lead?')">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% } else { %>
+  <div class="empty">No leads match</div>
+  <% } %>
+</div>
+
+<%- include('partials/foot') %>

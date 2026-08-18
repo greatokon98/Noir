@@ -1,0 +1,51 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+
+<div class="view" data-od-id="admin-settings">
+  <div class="view-head">
+    <div>
+      <h2>Settings</h2>
+      <p class="view-desc">Copy that renders on the landing page, plus notification behaviour.</p>
+    </div>
+  </div>
+
+  <form method="post" action="/admin/settings">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="panel">
+      <div class="panel-head"><h3>Page content</h3><span class="panel-meta">Renders live on the site</span></div>
+      <div class="grid-2">
+        <% fields.forEach(function (f, i) { %>
+        <div class="field">
+          <label for="s-<%= f.key %>"><%= f.label %></label>
+          <input id="s-<%= f.key %>" name="<%= f.key %>" value="<%= f.value %>">
+          <p class="field-hint"><%= f.hint %></p>
+        </div>
+        <% }); %>
+      </div>
+      <div class="editor-actions"><span class="spacer"></span><button class="btn btn-primary" type="submit" data-od-id="cta-save-settings">Save page content</button></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h3>Notifications</h3><span class="panel-meta">Concierge alerts on new leads</span></div>
+      <label class="switch">
+        <input type="checkbox" name="email_alerts" value="1"<%= emailAlerts ? ' checked' : '' %><%= smtpConfigured ? '' : ' disabled' %>>
+        <span class="track"></span>
+        <span>Email alerts on new leads</span>
+      </label>
+      <% if (!smtpConfigured) { %>
+      <p class="field-hint" style="margin-top:var(--space-3)">Email alerts are disabled — configure SMTP_HOST, SMTP_USER, SMTP_PASS in .env to enable.</p>
+      <% } %>
+    </div>
+  </form>
+
+  <div class="panel" style="border-color:color-mix(in oklab, var(--danger), transparent 60%)">
+    <div class="panel-head"><h3>Data</h3><span class="panel-meta">SQLite noir.db</span></div>
+    <p class="view-desc" style="margin-bottom:var(--space-4)">Leads, members, tiers, posts and settings all live in the single <b>noir.db</b> file. Back it up by copying the file while the server is stopped.</p>
+    <form method="post" action="/admin/logout">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-ghost btn-sm" type="submit">Sign out</button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/foot') %>

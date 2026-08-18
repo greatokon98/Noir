@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOIR Admin — Private Fitness Club</title>
+<meta name="theme-color" content="#080706">
+<style>
+/* design-systems/luxury/tokens.css — bound verbatim */
+:root {
+  --bg: #080706;
+  --surface: #151310;
+  --surface-warm: #241e14;
+  --fg: #fff8ea;
+  --fg-2: #d8cdb7;
+  --muted: #9f927c;
+  --meta: #c6a15b;
+  --border: #3a3020;
+  --border-soft: #282217;
+  --accent: #c6a15b;
+  --accent-on: #080706;
+  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+  --success: #5fa36a;
+  --warn: #d8a94f;
+  --danger: #d85a52;
+  --font-display: "Didot", "Bodoni 72", Georgia, serif;
+  --font-body: "Avenir Next", Inter, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, Menlo, monospace;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 19px;
+  --text-xl: 28px;
+  --text-2xl: 44px;
+  --text-3xl: 68px;
+  --text-4xl: 96px;
+  --leading-body: 1.6;
+  --leading-tight: 0.98;
+  --tracking-display: -0.015em;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --section-y-desktop: 120px;
+  --section-y-tablet: 84px;
+  --section-y-phone: 60px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 30px 90px rgba(0, 0, 0, 0.52);
+  --focus-ring: 0 0 0 4px rgba(198, 161, 91, 0.30);
+  --motion-fast: 180ms;
+  --motion-base: 300ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --container-max: 1160px;
+  --container-gutter-desktop: 36px;
+  --container-gutter-tablet: 24px;
+  --container-gutter-phone: 16px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--font-body);
+  font-size:var(--text-base);
+  line-height:var(--leading-body);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;letter-spacing:var(--tracking-display);line-height:var(--leading-tight);margin:0}
+::selection{background:color-mix(in oklab, var(--accent), transparent 70%);color:var(--fg)}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);
+  font-family:var(--font-body);font-weight:500;font-size:var(--text-sm);
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:12px 20px;min-height:44px;border-radius:var(--radius-md);
+  border:1px solid transparent;cursor:pointer;white-space:nowrap;
+  transition:background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard);
+}
+.btn-primary{background:var(--accent);color:var(--accent-on)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:active{background:var(--accent-active)}
+.btn-ghost{border-color:var(--border);color:var(--fg);background:transparent}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{border-color:color-mix(in oklab, var(--danger), transparent 55%);color:var(--danger);background:transparent}
+.btn-danger:hover{border-color:var(--danger);background:color-mix(in oklab, var(--danger), transparent 92%)}
+.btn-sm{padding:8px 14px;min-height:38px;font-size:var(--text-xs)}
+.btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:none;box-shadow:var(--focus-ring);
+}
+button{font-family:inherit}
+
+/* fields */
+.field{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-5)}
+.field label{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-2)}
+.field input,.field select,.field textarea{
+  appearance:none;width:100%;min-height:44px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--fg);font-family:var(--font-body);font-size:var(--text-base);
+  padding:10px var(--space-4);
+  transition:border-color var(--motion-fast) var(--ease-standard),box-shadow var(--motion-fast) var(--ease-standard);
+}
+.field textarea{min-height:96px;resize:vertical;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);outline:none;box-shadow:var(--focus-ring)}
+.field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c6a15b' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 18px center;padding-right:44px;cursor:pointer;
+}
+.field select option{background:var(--surface);color:var(--fg)}
+.field-hint{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.04em;color:var(--muted)}
+
+/* login */
+.login{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:var(--space-6);
+  background:radial-gradient(90% 70% at 78% 8%, color-mix(in oklab, var(--accent), transparent 94%) 0%, transparent 60%),linear-gradient(180deg,#0d0b09 0%,var(--bg) 55%,#050404 100%);
+}
+.login-card{
+  width:min(420px,100%);
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:clamp(28px,5vw,44px);
+  box-shadow:var(--elev-raised);
+}
+.login-wordmark{display:flex;flex-direction:column;line-height:1;gap:3px;margin-bottom:var(--space-8)}
+.login-wordmark strong{font-family:var(--font-display);font-weight:400;font-size:30px;letter-spacing:.06em;color:var(--fg)}
+.login-wordmark span{font-family:var(--font-mono);font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted)}
+.login-card h1{font-size:clamp(28px,4vw,34px);color:var(--fg)}
+.login-card .login-sub{color:var(--fg-2);font-size:var(--text-sm);margin-top:var(--space-2);margin-bottom:var(--space-6)}
+.login-hint{
+  margin-top:var(--space-5);padding:var(--space-4);
+  border:1px dashed var(--border);border-radius:var(--radius-sm);
+  font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.04em;color:var(--muted);line-height:1.6;
+}
+.login-hint b{color:var(--accent);font-weight:500}
+.login-error{
+  display:none;color:var(--danger);font-family:var(--font-mono);font-size:var(--text-xs);
+  margin-bottom:var(--space-4);
+}
+
+/* app shell */
+.app{display:flex;min-height:100vh}
+.rail{
+  width:240px;flex:none;
+  display:flex;flex-direction:column;
+  background:var(--surface);border-right:1px solid var(--border-soft);
+  padding:var(--space-6) var(--space-4);
+  position:sticky;top:0;height:100vh;
+}
+.rail-brand{display:flex;flex-direction:column;line-height:1;gap:3px;padding:0 var(--space-2) var(--space-6);border-bottom:1px solid var(--border-soft);margin-bottom:var(--space-6)}
+.rail-brand strong{font-family:var(--font-display);font-weight:400;font-size:24px;letter-spacing:.06em}
+.rail-brand small{font-family:var(--font-mono);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.rail-nav{display:flex;flex-direction:column;gap:2px;flex:1}
+.rail-link{
+  display:flex;align-items:center;gap:var(--space-3);
+  width:100%;text-align:left;
+  background:transparent;border:1px solid transparent;border-radius:var(--radius-sm);
+  color:var(--fg-2);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.14em;text-transform:uppercase;
+  padding:11px var(--space-3);cursor:pointer;
+  transition:color var(--motion-fast) var(--ease-standard),background var(--motion-fast) var(--ease-standard);
+}
+.rail-link .rl-num{color:var(--muted);letter-spacing:.1em}
+.rail-link:hover{color:var(--fg)}
+.rail-link.active{background:color-mix(in oklab, var(--accent), transparent 90%);color:var(--accent);border-color:color-mix(in oklab, var(--accent), transparent 80%)}
+.rail-link.active .rl-num{color:var(--accent)}
+.rail-foot{border-top:1px solid var(--border-soft);padding-top:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2)}
+.rail-user{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;color:var(--muted);padding:0 var(--space-3)}
+.rail-user b{color:var(--fg);font-weight:500}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-6);
+  padding:var(--space-6) var(--space-8);
+  border-bottom:1px solid var(--border-soft);
+  background:color-mix(in oklab, var(--bg), transparent 6%);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  position:sticky;top:0;z-index:5;
+}
+.topbar h1{font-size:clamp(24px,2.6vw,32px);color:var(--fg)}
+.topbar-sub{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.demo-banner{
+  display:flex;align-items:center;gap:var(--space-3);
+  background:color-mix(in oklab, var(--warn), transparent 90%);
+  border-bottom:1px solid color-mix(in oklab, var(--warn), transparent 70%);
+  color:var(--fg-2);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.04em;
+  padding:10px var(--space-8);
+}
+.demo-banner::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+.demo-banner button{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase}
+.demo-banner button:hover{color:var(--fg)}
+
+.content{padding:var(--space-8);flex:1}
+.view{max-width:1080px;margin-inline:auto;animation:fade .25s var(--ease-standard)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.view-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-8);flex-wrap:wrap}
+.view-head h2{font-size:clamp(22px,2.4vw,28px);color:var(--fg)}
+.view-head .view-desc{color:var(--fg-2);font-size:var(--text-sm);margin-top:var(--space-2);max-width:56ch}
+
+/* stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-5);margin-bottom:var(--space-8)}
+.stat{
+  background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-lg);
+  padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-2);
+}
+.stat-num{font-family:var(--font-display);font-size:clamp(30px,3vw,40px);color:var(--fg);line-height:1}
+.stat-label{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat-note{font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;color:var(--meta)}
+
+.panel{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-lg);padding:var(--space-6);margin-bottom:var(--space-6)}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-4);margin-bottom:var(--space-5)}
+.panel-head h3{font-size:var(--text-xl);color:var(--fg)}
+.panel-head .panel-meta{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;color:var(--muted)}
+
+/* pipeline bars */
+.pipe{display:flex;flex-direction:column;gap:var(--space-4)}
+.pipe-row{display:grid;grid-template-columns:110px 1fr 40px;align-items:center;gap:var(--space-4)}
+.pipe-label{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-2)}
+.pipe-track{height:8px;border-radius:var(--radius-pill);background:var(--bg);overflow:hidden;border:1px solid var(--border-soft)}
+.pipe-fill{height:100%;border-radius:inherit}
+.pipe-count{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--fg);text-align:right}
+.f-accent{background:var(--accent)}
+.f-warn{background:var(--warn)}
+.f-neutral{background:var(--fg-2)}
+.f-ok{background:var(--success)}
+.f-bad{background:var(--danger)}
+
+/* badges */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 10px;border-radius:var(--radius-pill);border:1px solid;
+  white-space:nowrap;
+}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-accent{color:var(--accent);border-color:color-mix(in oklab, var(--accent), transparent 65%);background:color-mix(in oklab, var(--accent), transparent 92%)}
+.b-warn{color:var(--warn);border-color:color-mix(in oklab, var(--warn), transparent 65%);background:color-mix(in oklab, var(--warn), transparent 92%)}
+.b-neutral{color:var(--fg-2);border-color:var(--border);background:var(--bg)}
+.b-ok{color:var(--success);border-color:color-mix(in oklab, var(--success), transparent 65%);background:color-mix(in oklab, var(--success), transparent 92%)}
+.b-bad{color:var(--danger);border-color:color-mix(in oklab, var(--danger), transparent 65%);background:color-mix(in oklab, var(--danger), transparent 92%)}
+
+/* tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border);font-weight:400;
+}
+td{padding:var(--space-4);border-bottom:1px solid var(--border-soft);vertical-align:middle;color:var(--fg-2);font-size:var(--text-sm)}
+tr:last-child td{border-bottom:none}
+tbody tr{cursor:pointer;transition:background var(--motion-fast) var(--ease-standard)}
+tbody tr:hover{background:color-mix(in oklab, var(--accent), transparent 96%)}
+td strong{color:var(--fg);font-weight:500}
+td .cell-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);margin-top:2px}
+td .status-sel{min-height:34px;padding:4px 30px 4px 10px;font-size:var(--text-xs);width:auto}
+
+/* chips filter */
+.chips{display:flex;gap:var(--space-2);flex-wrap:wrap}
+.chip{
+  font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--fg-2);background:transparent;border:1px solid var(--border);border-radius:var(--radius-pill);
+  padding:8px 14px;cursor:pointer;transition:color var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard);
+}
+.chip:hover{color:var(--fg);border-color:var(--accent)}
+.chip.active{color:var(--accent-on);background:var(--accent);border-color:var(--accent)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);margin-bottom:var(--space-5);flex-wrap:wrap}
+.toolbar-left{display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;flex:1}
+.toolbar .search{
+  min-width:240px;max-width:340px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--fg);font-family:var(--font-body);font-size:var(--text-sm);
+  padding:10px var(--space-4);min-height:44px;
+}
+.toolbar .search:focus{border-color:var(--accent);outline:none;box-shadow:var(--focus-ring)}
+.empty{padding:var(--space-8);text-align:center;color:var(--muted);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;border:1px dashed var(--border);border-radius:var(--radius-md)}
+
+/* membership tier cards */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5)}
+.tier{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-3);
+  position:relative;
+}
+.tier.featured{border-color:var(--accent);box-shadow:var(--elev-raised)}
+.tier-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-3)}
+.tier-name{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+.tier-price{font-family:var(--font-display);font-size:clamp(26px,2.6vw,34px);color:var(--fg);line-height:1}
+.tier-price small{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);letter-spacing:.04em}
+.tier-tagline{color:var(--fg-2);font-size:var(--text-sm);line-height:1.5}
+.tier ul{display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-2)}
+.tier li{display:flex;gap:var(--space-3);color:var(--fg-2);font-size:var(--text-sm)}
+.tier li::before{content:"";width:12px;height:1px;background:var(--accent);margin-top:9px;flex:none}
+.tier-actions{display:flex;gap:var(--space-2);margin-top:auto;padding-top:var(--space-4);border-top:1px solid var(--border-soft)}
+.tier-actions .spacer{flex:1}
+
+/* text link */
+.text-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-2);background:none;border:none;border-bottom:1px solid var(--border);padding:0 0 2px;cursor:pointer;transition:color var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
+.text-link:hover{color:var(--accent);border-color:var(--accent)}
+.text-link .arrow{transition:transform var(--motion-fast) var(--ease-standard)}
+.text-link:hover .arrow{transform:translateX(4px)}
+
+/* blog */
+.post-row{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-5) 0;border-bottom:1px solid var(--border-soft)}
+.post-row:last-child{border-bottom:none}
+.post-main{flex:1;min-width:0}
+.post-main strong{color:var(--fg);font-weight:500;font-size:var(--text-base);display:block}
+.post-main .post-meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);margin-top:4px;letter-spacing:.06em}
+.post-actions{display:flex;gap:var(--space-2);align-items:center}
+
+/* editor */
+.editor-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-6);align-items:start}
+.editor-pane .field{margin-bottom:var(--space-4)}
+.editor-pane textarea.mono{font-family:var(--font-mono);font-size:var(--text-sm);line-height:1.6;min-height:300px}
+.preview{
+  background:var(--bg);border:1px solid var(--border-soft);border-radius:var(--radius-md);
+  padding:var(--space-6);min-height:300px;
+}
+.preview h3{font-size:22px;color:var(--fg);margin-bottom:var(--space-2)}
+.preview .pv-meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);letter-spacing:.1em;margin-bottom:var(--space-4)}
+.preview p{color:var(--fg-2);font-size:var(--text-sm);line-height:1.6;margin-bottom:var(--space-3)}
+.preview h4{font-family:var(--font-display);font-size:18px;color:var(--fg);margin:var(--space-4) 0 var(--space-2)}
+.cover-preview{margin-top:var(--space-2);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg);border:1px solid var(--border-soft);min-height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em}
+.cover-preview img{width:100%;height:150px;object-fit:cover;display:block}
+.editor-actions{display:flex;gap:var(--space-3);align-items:center;margin-top:var(--space-6);flex-wrap:wrap}
+.editor-actions .spacer{flex:1}
+
+/* modal + drawer */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20;opacity:0;visibility:hidden;transition:opacity var(--motion-base) var(--ease-standard),visibility var(--motion-base) var(--ease-standard)}
+.backdrop.open{opacity:1;visibility:visible}
+.modal{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) translateY(8px);
+  width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 48px);overflow:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-8);z-index:21;opacity:0;visibility:hidden;
+  transition:opacity var(--motion-base) var(--ease-standard),transform var(--motion-base) var(--ease-standard),visibility var(--motion-base) var(--ease-standard);
+  box-shadow:var(--elev-raised);
+}
+.modal.open{opacity:1;visibility:visible;transform:translate(-50%,-50%)}
+.modal h3{font-size:24px;color:var(--fg);margin-bottom:var(--space-2)}
+.modal .modal-sub{color:var(--fg-2);font-size:var(--text-sm);margin-bottom:var(--space-6)}
+.modal-actions{display:flex;gap:var(--space-3);justify-content:flex-end;margin-top:var(--space-6);flex-wrap:wrap}
+
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(460px,calc(100vw - 24px));
+  background:var(--surface);border-left:1px solid var(--border);z-index:21;
+  transform:translateX(100%);transition:transform var(--motion-base) var(--ease-standard);
+  display:flex;flex-direction:column;
+}
+.drawer.open{transform:none}
+.drawer-head{padding:var(--space-6) var(--space-6) var(--space-4);border-bottom:1px solid var(--border-soft)}
+.drawer-head h3{font-size:24px}
+.drawer-head .drawer-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);margin-top:4px;letter-spacing:.08em}
+.drawer-body{padding:var(--space-6);overflow:auto;flex:1}
+.drawer-foot{padding:var(--space-5) var(--space-6);border-top:1px solid var(--border-soft);display:flex;gap:var(--space-3);justify-content:flex-end}
+.drawer-close{position:absolute;top:var(--space-5);right:var(--space-5);background:none;border:none;color:var(--muted);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.drawer-close:hover{color:var(--fg)}
+.drawer .kv{display:flex;flex-direction:column;gap:2px;margin-bottom:var(--space-4)}
+.drawer .kv span{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.drawer .kv b{color:var(--fg);font-weight:500;font-size:var(--text-sm)}
+
+/* switch */
+.switch{position:relative;display:inline-flex;align-items:center;gap:var(--space-3);cursor:pointer}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.switch .track{width:44px;height:24px;border-radius:var(--radius-pill);background:var(--border);transition:background var(--motion-fast) var(--ease-standard);flex:none;position:relative}
+.switch .track::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--fg);transition:transform var(--motion-fast) var(--ease-standard)}
+.switch input:checked + .track{background:var(--accent)}
+.switch input:checked + .track::after{transform:translateX(20px);background:var(--accent-on)}
+.switch input:disabled + .track{opacity:.4}
+.switch input:focus-visible + .track{box-shadow:var(--focus-ring)}
+.switch span{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-2)}
+
+/* toast */
+.toast{
+  position:fixed;bottom:var(--space-6);right:var(--space-6);z-index:40;
+  background:var(--surface-warm);border:1px solid var(--border);border-left:2px solid var(--accent);
+  color:var(--fg);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.06em;
+  padding:14px 18px;border-radius:var(--radius-sm);box-shadow:var(--elev-raised);
+  opacity:0;transform:translateY(8px);transition:opacity var(--motion-base) var(--ease-standard),transform var(--motion-base) var(--ease-standard);pointer-events:none;
+}
+.toast.show{opacity:1;transform:none}
+
+.notice{
+  display:flex;gap:var(--space-3);align-items:flex-start;
+  border:1px solid color-mix(in oklab, var(--warn), transparent 65%);
+  background:color-mix(in oklab, var(--warn), transparent 92%);
+  border-radius:var(--radius-sm);padding:var(--space-4);margin-bottom:var(--space-6);
+  color:var(--fg-2);font-size:var(--text-sm);line-height:1.5;
+}
+.notice::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none;margin-top:6px}
+.notice b{color:var(--warn);font-weight:500}
+
+@media (max-width:960px){
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .tier-grid{grid-template-columns:1fr}
+  .editor-grid{grid-template-columns:1fr}
+  .rail{width:72px;padding:var(--space-6) var(--space-2)}
+  .rail .rl-label,.rail small,.rail-brand small,.rail-user,.rail-foot .rl-num{display:none}
+  .rail-brand{padding-inline:0}
+  .rail-link{justify-content:center}
+}
+@media (max-width:640px){
+  .content{padding:var(--space-5)}
+  .topbar{padding:var(--space-5)}
+  .toolbar-left{width:100%}
+  .toolbar .search{max-width:none;flex:1}
+  .stat-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="screen-login">
+  <form class="login-card" novalidate onsubmit="return doLogin(event)">
+    <a class="login-wordmark" href="#" onclick="return false">
+      <strong>NOIR</strong>
+      <span>Private Fitness Club · Admin</span>
+    </a>
+    <h1>Sign in to the desk.</h1>
+    <p class="login-sub">Concierge access. Sessions last 24 hours.</p>
+    <p class="login-error" id="login-error">That combination doesn't open the door.</p>
+    <div class="field">
+      <label for="l-email">Email</label>
+      <input id="l-email" name="email" type="email" autocomplete="username" value="owner@noirclub.com" required>
+    </div>
+    <div class="field">
+      <label for="l-pass">Password</label>
+      <input id="l-pass" name="password" type="password" autocomplete="current-password" value="noir2026" required>
+    </div>
+    <button class="btn btn-primary" type="submit" style="width:100%">Sign in</button>
+    <p class="login-hint">Demo login — <b>owner@noirclub.com</b> / <b>noir2026</b>. The real app authenticates against the <b>admins</b> table with bcrypt + sessions.</p>
+  </form>
+</div>
+
+<!-- APP -->
+<div class="app" id="screen-app" hidden>
+  <aside class="rail">
+    <a class="rail-brand" href="#" onclick="go('dashboard');return false">
+      <strong>NOIR</strong>
+      <small>Admin</small>
+    </a>
+    <nav class="rail-nav">
+      <button class="rail-link" data-view="dashboard" onclick="go('dashboard')"><span class="rl-num">01</span><span class="rl-label">Dashboard</span></button>
+      <button class="rail-link" data-view="leads" onclick="go('leads')"><span class="rl-num">02</span><span class="rl-label">Leads</span></button>
+      <button class="rail-link" data-view="members" onclick="go('members')"><span class="rl-num">03</span><span class="rl-label">Members</span></button>
+      <button class="rail-link" data-view="membership" onclick="go('membership')"><span class="rl-num">04</span><span class="rl-label">Membership</span></button>
+      <button class="rail-link" data-view="blog" onclick="go('blog')"><span class="rl-num">05</span><span class="rl-label">Blog</span></button>
+      <button class="rail-link" data-view="settings" onclick="go('settings')"><span class="rl-num">06</span><span class="rl-label">Settings</span></button>
+    </nav>
+    <div class="rail-foot">
+      <span class="rail-user">Signed in as <b id="rail-user-name">Owner</b></span>
+      <button class="rail-link" onclick="logout()"><span class="rl-num">→</span><span class="rl-label">Sign out</span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="view-title">Dashboard</h1>
+        <p class="topbar-sub" id="view-sub"></p>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="resetDemo()">Reset demo data</button>
+    </header>
+    <div class="demo-banner" id="demo-banner">
+      Preview runs on demo data — it mirrors the real schema (leads, members, tiers, posts, settings).
+      <button onclick="document.getElementById('demo-banner').hidden=true">Dismiss</button>
+    </div>
+
+    <div class="content">
+      <section class="view" id="view-dashboard"></section>
+      <section class="view" id="view-leads" hidden></section>
+      <section class="view" id="view-members" hidden></section>
+      <section class="view" id="view-membership" hidden></section>
+      <section class="view" id="view-blog" hidden></section>
+      <section class="view" id="view-settings" hidden></section>
+    </div>
+  </div>
+</div>
+
+<!-- drawer -->
+<div class="backdrop" id="backdrop" onclick="closeOverlays()"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeOverlays()">Close</button>
+  <div class="drawer-head">
+    <h3 id="drawer-title"></h3>
+    <p class="drawer-sub" id="drawer-sub"></p>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot" id="drawer-foot"></div>
+</div>
+<div class="modal" id="modal">
+  <h3 id="modal-title"></h3>
+  <p class="modal-sub" id="modal-sub"></p>
+  <div id="modal-body"></div>
+  <div class="modal-actions" id="modal-actions"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var LS_KEY = 'noir_admin_state_v1';
+  var ADMIN_EMAIL = 'owner@noirclub.com';
+  var ADMIN_PASS = 'noir2026';
+
+  var STATUS = {
+    new: 'New', contacted: 'Contacted', toured: 'Toured', converted: 'Converted', declined: 'Declined'
+  };
+  var STATUS_CLS = { new: 'b-accent', contacted: 'b-warn', toured: 'b-neutral', converted: 'b-ok', declined: 'b-bad' };
+  var MEM_STATUS = { active: 'b-ok', paused: 'b-warn', former: 'b-bad' };
+  var TIME_LABEL = { morning: 'Morning · 06:00–12:00', afternoon: 'Afternoon · 12:00–17:00', evening: 'Evening · 17:00–21:00' };
+  var SOURCE_LABEL = { tour: 'Tour request', signup: 'Membership signup' };
+
+  function daysAgo(n, hour) {
+    var d = new Date();
+    d.setDate(d.getDate() - n);
+    if (hour !== undefined) d.setHours(hour, 0, 0, 0);
+    return d.toISOString();
+  }
+
+  function seed() {
+    return {
+      leads: [
+        { id: 1, name: 'J. Mercier', email: 'jm@example.com', phone: '+1 (212) 555-0142', time: 'morning', source: 'tour', status: 'new', notes: '', created: daysAgo(0, 9) },
+        { id: 2, name: 'A. Reinholt', email: 'ar@example.com', phone: '+1 (917) 555-0198', time: 'evening', source: 'tour', status: 'new', notes: 'Asked about Signature tier.', created: daysAgo(1, 14) },
+        { id: 3, name: 'D. Calloway', email: 'dc@example.com', phone: '+1 (646) 555-0104', time: 'afternoon', source: 'signup', status: 'contacted', notes: 'Sent program overview.', created: daysAgo(2, 11) },
+        { id: 4, name: 'K. Osei', email: 'ko@example.com', phone: '+1 (212) 555-0177', time: 'morning', source: 'tour', status: 'contacted', notes: '', created: daysAgo(4, 8) },
+        { id: 5, name: 'S. Lindqvist', email: 'sl@example.com', phone: '+1 (929) 555-0123', time: 'evening', source: 'tour', status: 'toured', notes: 'Tour on Thursday, 19:00.', created: daysAgo(6, 16) },
+        { id: 6, name: 'M. Ferreira', email: 'mf@example.com', phone: '+1 (718) 555-0166', time: 'afternoon', source: 'tour', status: 'converted', notes: 'Signed Signature — started weekly 1:1.', created: daysAgo(9, 10) },
+        { id: 7, name: 'T. Nakamura', email: 'tn@example.com', phone: '+1 (212) 555-0118', time: 'morning', source: 'tour', status: 'declined', notes: 'Timing not right; revisit in Q3.', created: daysAgo(12, 9) }
+      ],
+      members: [
+        { id: 1, name: 'M. Ferreira', email: 'mf@example.com', phone: '+1 (718) 555-0166', tier: 'signature', status: 'active', joined: '2026-01-28' },
+        { id: 2, name: 'G. Antonelli', email: 'ga@example.com', phone: '+1 (212) 555-0189', tier: 'residence', status: 'active', joined: '2025-11-04' },
+        { id: 3, name: 'R. Beaumont', email: 'rb@example.com', phone: '+1 (917) 555-0155', tier: 'atelier', status: 'active', joined: '2024-06-19' },
+        { id: 4, name: 'H. Okafor', email: 'ho@example.com', phone: '+1 (646) 555-0137', tier: 'signature', status: 'paused', joined: '2025-03-12' },
+        { id: 5, name: 'P. Larsson', email: 'pl@example.com', phone: '+1 (212) 555-0161', tier: 'residence', status: 'former', joined: '2023-09-01' }
+      ],
+      tiers: [
+        { key: 'residence', name: 'Résidence', price: 295, billing: '/ month', tagline: 'Full access, 06:00–23:00. Your programming, checked monthly.', features: ['Full club access', 'Programming checked monthly', 'Recovery suite, standard booking'], sort: 1, published: true, featured: false },
+        { key: 'signature', name: 'Signature', price: 495, billing: '/ month', tagline: 'Full access, a weekly 1:1 session, priority recovery booking.', features: ['Full club access, 24/7 by key card', 'One 1:1 session per week', 'Priority recovery booking', 'Quarterly nutrition review'], sort: 2, published: true, featured: true },
+        { key: 'atelier', name: 'Atelier', price: null, billing: 'By application', tagline: 'Fully bespoke. Your coach, your schedule, the room to yourself when you need it.', features: ['Dedicated lead coach', 'Private room access on request', 'Concierge scheduling, 06:00–21:00'], sort: 3, published: true, featured: false }
+      ],
+      posts: [
+        { id: 1, slug: 'why-we-test-every-six-weeks', title: 'Why we test every six weeks', excerpt: 'Numbers you can defend beat goals you can\'t. What the retest tells us — and what it doesn\'t.', body: '## Numbers you can defend\n\nEvery six weeks we re-run the same five lifts. Not because the number is the point, but because it is honest.\n\n**What the retest tells us:** whether the last block actually moved the needle.\n\nWhat it does not tell us is everything else. Sleep, stress, the week you had. We read the number, then we read the context.', status: 'published', cover: '', publishedAt: daysAgo(2, 7), updated: daysAgo(2, 7) },
+        { id: 2, slug: 'the-plunge-is-a-skill', title: 'The plunge is a skill', excerpt: 'Four degrees is not a punishment. It is a practice with a technique — and you can learn it.', body: '## Four degrees is not a punishment\n\nThe plunge is not a dare. It is a skill with an entry point and a progression, and it responds to practice the same way a squat does.\n\nStart warm. Breathe. Build time in increments, not heroics. **The goal is to come back.**', status: 'published', cover: '', publishedAt: daysAgo(9, 7), updated: daysAgo(9, 7) },
+        { id: 3, slug: 'food-for-your-actual-week', title: 'Food for your actual week', excerpt: 'A nutrition plan fails when it assumes a perfect week. So we write for the week you actually have.', body: '## Write for the week you have\n\nTravel, dinners, the morning you forget to eat. The plan that survives is the one built around those — not around a fantasy schedule.\n\n*It is not about willpower. It is about structure.*', status: 'draft', cover: '', publishedAt: null, updated: daysAgo(1, 15) }
+      ],
+      settings: {
+        heroEyebrow: 'Private fitness club — New York',
+        ctaPrimary: 'Book a private tour',
+        ctaTour: 'Request my tour',
+        phone: '+1 (212) 555-0130',
+        email: 'hello@noirclub.com',
+        hoursClub: '06:00–23:00',
+        hoursConcierge: '06:00–21:00',
+        emailAlerts: false
+      }
+    };
+  }
+
+  var state = load();
+  function load() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return seed();
+  }
+  function save() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+  var viewMeta = {
+    dashboard: ['Dashboard', 'A quiet morning across the club'],
+    leads: ['Leads', 'Tour requests and membership inquiries'],
+    members: ['Members', 'The 420, kept current by hand'],
+    membership: ['Membership', 'Three tiers — managed here, rendered on the site'],
+    blog: ['Blog', 'Journal posts, drafts and published'],
+    settings: ['Settings', 'Editable page content and notifications']
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmtDate(ts) {
+    if (!ts) return '—';
+    var d = new Date(ts);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  function fmtTimeLabel(t) { return TIME_LABEL[t] || t; }
+  function fmtSourceLabel(s) { return SOURCE_LABEL[s] || s; }
+  function tierName(key) {
+    var t = state.tiers.find(function (x) { return x.key === key; });
+    return t ? t.name : key;
+  }
+  function badge(status) {
+    var cls = STATUS_CLS[status] || 'b-neutral';
+    var label = status === 'new' ? 'New' : (STATUS[status] || status);
+    return '<span class="badge ' + cls + '">' + esc(label) + '</span>';
+  }
+
+  /* ----- navigation ----- */
+  function go(view) {
+    var order = ['dashboard', 'leads', 'members', 'membership', 'blog', 'settings'];
+    order.forEach(function (v) { $('view-' + v).hidden = (v !== view); });
+    document.querySelectorAll('.rail-link').forEach(function (el) {
+      el.classList.toggle('active', el.getAttribute('data-view') === view);
+    });
+    $('view-title').textContent = viewMeta[view][0];
+    $('view-sub').textContent = viewMeta[view][1];
+    try { sessionStorage.setItem('noir_view', view); } catch (e) {}
+    render[view]();
+    $('view-' + view).scrollTop = 0;
+  }
+  window.go = go;
+
+  /* ----- login ----- */
+  window.doLogin = function (e) {
+    e.preventDefault();
+    var em = $('l-email').value.trim().toLowerCase();
+    var pw = $('l-pass').value;
+    if (em === ADMIN_EMAIL && pw === ADMIN_PASS) {
+      try { sessionStorage.setItem('noir_admin', '1'); } catch (err) {}
+      $('screen-login').hidden = true;
+      $('screen-app').hidden = false;
+      go('dashboard');
+      return false;
+    }
+    $('login-error').style.display = 'block';
+    return false;
+  };
+  window.logout = function () {
+    try { sessionStorage.removeItem('noir_admin'); } catch (e) {}
+    $('screen-app').hidden = true;
+    $('screen-login').hidden = false;
+    $('login-error').style.display = 'none';
+  };
+
+  /* ----- overlays ----- */
+  var drawerLeadId = null;
+  function openDrawer(title, sub, bodyHtml, footHtml, leadId) {
+    drawerLeadId = (leadId !== undefined) ? leadId : null;
+    $('drawer-title').textContent = title;
+    $('drawer-sub').textContent = sub || '';
+    $('drawer-body').innerHTML = bodyHtml;
+    $('drawer-foot').innerHTML = footHtml || '';
+    $('drawer').classList.add('open');
+    $('backdrop').classList.add('open');
+  }
+  window.closeOverlays = function () {
+    $('drawer').classList.remove('open');
+    $('modal').classList.remove('open');
+    $('backdrop').classList.remove('open');
+  };
+  window.openModal = function (title, sub, bodyHtml, actionsHtml) {
+    $('modal-title').textContent = title;
+    $('modal-sub').textContent = sub || '';
+    $('modal-body').innerHTML = bodyHtml;
+    $('modal-actions').innerHTML = actionsHtml || '';
+    $('modal').classList.add('open');
+    $('backdrop').classList.add('open');
+  };
+
+  var toastTimer;
+  function toast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2400);
+  }
+
+  /* ----- markdown preview (tiny) ----- */
+  function renderMd(md) {
+    var lines = String(md || '').split('\n');
+    var html = [], inList = false;
+    lines.forEach(function (line) {
+      var t = esc(line);
+      if (/^## /.test(t)) { if (inList) { html.push('</ul>'); inList = false; } html.push('<h4>' + t.replace(/^## /, '') + '</h4>'); return; }
+      if (/^# /.test(t)) { if (inList) { html.push('</ul>'); inList = false; } html.push('<h3>' + t.replace(/^# /, '') + '</h3>'); return; }
+      if (/^[-*] /.test(t)) { if (!inList) { html.push('<ul>'); inList = true; } html.push('<li>' + t.replace(/^[-*] /, '') + '</li>'); return; }
+      if (inList) { html.push('</ul>'); inList = false; }
+      if (t.trim() === '') { html.push('<p></p>'); return; }
+      html.push('<p>' + t + '</p>');
+    });
+    if (inList) html.push('</ul>');
+    return html.join('').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+  }
+
+  /* ----- dashboard ----- */
+  function renderDashboard() {
+    var now = Date.now();
+    var week = 7 * 24 * 3600 * 1000;
+    var leadsThisWeek = state.leads.filter(function (l) { return (now - new Date(l.created).getTime()) < week; }).length;
+    var counts = {};
+    Object.keys(STATUS).forEach(function (s) { counts[s] = state.leads.filter(function (l) { return l.status === s; }).length; });
+    var total = state.leads.length || 1;
+    var activeMembers = state.members.filter(function (m) { return m.status === 'active'; }).length;
+    var published = state.posts.filter(function (p) { return p.status === 'published'; }).length;
+
+    var pipe = Object.keys(STATUS).map(function (s) {
+      var pct = Math.round((counts[s] / total) * 100);
+      return '<div class="pipe-row">' +
+        '<span class="pipe-label">' + STATUS[s] + '</span>' +
+        '<div class="pipe-track"><div class="pipe-fill ' + (STATUS_CLS[s].replace('b-', 'f-')) + '" style="width:' + pct + '%"></div></div>' +
+        '<span class="pipe-count">' + counts[s] + '</span></div>';
+    }).join('');
+
+    var recent = state.leads.slice().sort(function (a, b) { return new Date(b.created) - new Date(a.created); }).slice(0, 5);
+    var rows = recent.map(function (l) {
+      return '<tr onclick="editLead(' + l.id + ')">' +
+        '<td><strong>' + esc(l.name) + '</strong><div class="cell-sub">' + esc(l.email) + '</div></td>' +
+        '<td>' + badge(l.status) + '</td>' +
+        '<td>' + fmtDate(l.created) + '</td></tr>';
+    }).join('');
+
+    var notice = state.settings.emailAlerts ? '' :
+      '<div class="notice"><span><b>Email alerts are off.</b> New-lead notifications are implemented but wait for SMTP configuration (Settings → Notifications) before activating.</span></div>';
+
+    $('view-dashboard').innerHTML =
+      notice +
+      '<div class="stat-grid">' +
+      '<div class="stat"><span class="stat-num">' + leadsThisWeek + '</span><span class="stat-label">New leads this week</span><span class="stat-note">From the tour form</span></div>' +
+      '<div class="stat"><span class="stat-num">' + counts.new + '</span><span class="stat-label">Awaiting contact</span><span class="stat-note">Never left on read</span></div>' +
+      '<div class="stat"><span class="stat-num">' + activeMembers + '</span><span class="stat-label">Active members</span><span class="stat-note">Cap 420</span></div>' +
+      '<div class="stat"><span class="stat-num">' + published + '</span><span class="stat-label">Published posts</span><span class="stat-note">Journal on the site</span></div>' +
+      '</div>' +
+      '<div class="panel"><div class="panel-head"><h3>Lead pipeline</h3><span class="panel-meta">' + total + ' total</span></div><div class="pipe">' + pipe + '</div></div>' +
+      '<div class="panel"><div class="panel-head"><h3>Latest requests</h3><button class="text-link" onclick="go(\'leads\')">Open leads <span class="arrow" aria-hidden="true">→</span></button></div>' +
+      '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Status</th><th>Received</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+
+  /* ----- leads ----- */
+  var leadFilter = 'all';
+  var leadQuery = '';
+  function renderLeads() {
+    var chips = ['all'].concat(Object.keys(STATUS)).map(function (s) {
+      return '<button class="chip' + (leadFilter === s ? ' active' : '') + '" onclick="setLeadFilter(\'' + s + '\')">' +
+        (s === 'all' ? 'All' : STATUS[s]) + '</button>';
+    }).join('');
+
+    var list = state.leads.filter(function (l) {
+      var okStatus = leadFilter === 'all' || l.status === leadFilter;
+      var q = leadQuery.toLowerCase();
+      var okQuery = !q || (l.name + l.email + (l.phone || '')).toLowerCase().indexOf(q) > -1;
+      return okStatus && okQuery;
+    }).sort(function (a, b) { return new Date(b.created) - new Date(a.created); });
+
+    var rows = list.map(function (l) {
+      return '<tr onclick="editLead(' + l.id + ')">' +
+        '<td><strong>' + esc(l.name) + '</strong><div class="cell-sub">' + esc(l.email) + '</div></td>' +
+        '<td><div class="cell-sub">' + esc(l.phone || '—') + '</div></td>' +
+        '<td>' + fmtTimeLabel(l.time) + '</td>' +
+        '<td>' + fmtSourceLabel(l.source) + '</td>' +
+        '<td onclick="event.stopPropagation()"><select class="status-sel" onchange="setLeadStatus(' + l.id + ', this.value)">' +
+        Object.keys(STATUS).map(function (s) {
+          return '<option value="' + s + '"' + (l.status === s ? ' selected' : '') + '>' + STATUS[s] + '</option>';
+        }).join('') + '</select></td>' +
+        '<td>' + fmtDate(l.created) + '</td></tr>';
+    }).join('');
+
+    $('view-leads').innerHTML =
+      '<div class="toolbar"><div class="toolbar-left">' + chips +
+      '<input class="search" placeholder="Search name, email, phone…" value="' + esc(leadQuery) + '" oninput="setLeadQuery(this.value)">' +
+      '</div><button class="btn btn-primary" onclick="addLead()">Add lead</button></div>' +
+      (list.length ? '<div class="panel" style="padding:0 0 0 0"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Preferred time</th><th>Source</th><th>Status</th><th>Received</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>'
+        : '<div class="empty">No leads match</div>');
+  }
+  window.setLeadFilter = function (s) { leadFilter = s; renderLeads(); };
+  window.setLeadQuery = function (q) { leadQuery = q; renderLeads(); };
+  window.setLeadStatus = function (id, value) {
+    var l = state.leads.find(function (x) { return x.id === id; });
+    if (l) { l.status = value; save(); toast('Lead marked ' + STATUS[value]); }
+    if (drawerLeadId === id) renderLeadDrawer();
+  };
+  window.addLead = function () {
+    openDrawer('New lead', 'From the desk, by hand', leadFormHtml(null), leadFormFoot(true), null);
+  };
+  window.editLead = function (id) {
+    drawerLeadId = id;
+    var l = state.leads.find(function (x) { return x.id === id; });
+    if (!l) return;
+    openDrawer(l.name, 'Received ' + fmtDate(l.created), leadFormHtml(l), leadFormFoot(false), id);
+  };
+  function leadFormHtml(l) {
+    l = l || { name: '', email: '', phone: '', time: 'morning', source: 'tour', status: 'new', notes: '' };
+    var statusOpts = Object.keys(STATUS).map(function (s) {
+      return '<option value="' + s + '"' + (l.status === s ? ' selected' : '') + '>' + STATUS[s] + '</option>';
+    }).join('');
+    var sourceOpts = ['tour', 'signup'].map(function (s) {
+      return '<option value="' + s + '"' + (l.source === s ? ' selected' : '') + '>' + SOURCE_LABEL[s] + '</option>';
+    }).join('');
+    var timeOpts = ['morning', 'afternoon', 'evening'].map(function (t) {
+      return '<option value="' + t + '"' + (l.time === t ? ' selected' : '') + '>' + TIME_LABEL[t] + '</option>';
+    }).join('');
+    return '<div class="field"><label>Name</label><input id="f-name" value="' + esc(l.name) + '"></div>' +
+      '<div class="field"><label>Email</label><input id="f-email" type="email" value="' + esc(l.email) + '"></div>' +
+      '<div class="field"><label>Phone</label><input id="f-phone" value="' + esc(l.phone) + '"></div>' +
+      '<div class="field"><label>Preferred time</label><select id="f-time">' + timeOpts + '</select></div>' +
+      '<div class="field"><label>Source</label><select id="f-source">' + sourceOpts + '</select></div>' +
+      '<div class="field"><label>Status</label><select id="f-status">' + statusOpts + '</select></div>' +
+      '<div class="field"><label>Notes</label><textarea id="f-notes">' + esc(l.notes) + '</textarea></div>';
+  }
+  function leadFormFoot(isNew) {
+    var save = '<button class="btn btn-primary" onclick="saveLead(' + (isNew ? 'null' : drawerLeadId) + ')">' + (isNew ? 'Create lead' : 'Save changes') + '</button>';
+    var del = isNew ? '' : '<button class="btn btn-danger" onclick="deleteLead(' + drawerLeadId + ')">Delete</button>';
+    return del + '<span style="flex:1"></span>' + save;
+  }
+  function readLeadForm() {
+    return {
+      name: $('f-name').value.trim(),
+      email: $('f-email').value.trim(),
+      phone: $('f-phone').value.trim(),
+      time: $('f-time').value,
+      source: $('f-source').value,
+      status: $('f-status').value,
+      notes: $('f-notes').value.trim()
+    };
+  }
+  window.saveLead = function (id) {
+    var data = readLeadForm();
+    if (!data.name || !data.email) { toast('Name and email are required'); return; }
+    if (id === null) {
+      var maxId = state.leads.reduce(function (m, l) { return Math.max(m, l.id); }, 0);
+      state.leads.push({ id: maxId + 1, created: new Date().toISOString(), ...data });
+      toast('Lead created');
+    } else {
+      var l = state.leads.find(function (x) { return x.id === id; });
+      Object.assign(l, data);
+      toast('Lead saved');
+    }
+    save();
+    closeOverlays();
+    renderLeads();
+  };
+  window.deleteLead = function (id) {
+    state.leads = state.leads.filter(function (l) { return l.id !== id; });
+    save(); closeOverlays(); renderLeads(); toast('Lead deleted');
+  };
+  function renderLeadDrawer() {
+    var l = state.leads.find(function (x) { return x.id === drawerLeadId; });
+    if (!l) return;
+    openDrawer(l.name, 'Received ' + fmtDate(l.created), leadFormHtml(l), leadFormFoot(false), l.id);
+  }
+
+  /* ----- members ----- */
+  var memberQuery = '';
+  function renderMembers() {
+    var q = memberQuery.toLowerCase();
+    var list = state.members.filter(function (m) {
+      return !q || (m.name + m.email).toLowerCase().indexOf(q) > -1;
+    });
+    var rows = list.map(function (m) {
+      return '<tr>' +
+        '<td><strong>' + esc(m.name) + '</strong><div class="cell-sub">' + esc(m.email) + '</div></td>' +
+        '<td>' + esc(m.phone || '—') + '</td>' +
+        '<td>' + esc(tierName(m.tier)) + '</td>' +
+        '<td>' + badge(m.status) + '</td>' +
+        '<td>' + esc(m.joined) + '</td>' +
+        '<td onclick="event.stopPropagation()"><button class="btn btn-ghost btn-sm" onclick="editMember(' + m.id + ')">Edit</button></td></tr>';
+    }).join('');
+    $('view-members').innerHTML =
+      '<div class="toolbar"><div class="toolbar-left">' +
+      '<input class="search" placeholder="Search members…" value="' + esc(memberQuery) + '" oninput="setMemberQuery(this.value)">' +
+      '</div><div style="display:flex;gap:var(--space-3)"><button class="btn btn-ghost" onclick="importCsv()">Import CSV</button>' +
+      '<button class="btn btn-primary" onclick="editMember(null)">Add member</button></div></div>' +
+      (list.length ? '<div class="panel" style="padding:0 0 0 0"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Tier</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div></div>'
+        : '<div class="empty">No members match</div>');
+  }
+  window.setMemberQuery = function (q) { memberQuery = q; renderMembers(); };
+
+  function memberFormHtml(m) {
+    m = m || { name: '', email: '', phone: '', tier: 'residence', status: 'active', joined: '' };
+    var tierOpts = state.tiers.map(function (t) {
+      return '<option value="' + t.key + '"' + (m.tier === t.key ? ' selected' : '') + '>' + esc(t.name) + '</option>';
+    }).join('');
+    var statusOpts = ['active', 'paused', 'former'].map(function (s) {
+      return '<option value="' + s + '"' + (m.status === s ? ' selected' : '') + '>' + s.charAt(0).toUpperCase() + s.slice(1) + '</option>';
+    }).join('');
+    return '<div class="field"><label>Name</label><input id="m-name" value="' + esc(m.name) + '"></div>' +
+      '<div class="field"><label>Email</label><input id="m-email" type="email" value="' + esc(m.email) + '"></div>' +
+      '<div class="field"><label>Phone</label><input id="m-phone" value="' + esc(m.phone) + '"></div>' +
+      '<div class="field"><label>Tier</label><select id="m-tier">' + tierOpts + '</select></div>' +
+      '<div class="field"><label>Status</label><select id="m-status">' + statusOpts + '</select></div>' +
+      '<div class="field"><label>Joined</label><input id="m-joined" type="date" value="' + esc(m.joined) + '"></div>';
+  }
+  window.editMember = function (id) {
+    var m = state.members.find(function (x) { return x.id === id; });
+    window.__memberId = id;
+    openModal(m ? 'Edit member' : 'Add member', m ? '#' + m.id + ' · ' + esc(m.name) : 'Enter the member on the desk', memberFormHtml(m),
+      '<button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button>' +
+      '<button class="btn btn-primary" onclick="saveMember()">' + (m ? 'Save' : 'Add member') + '</button>');
+  };
+  window.saveMember = function () {
+    var d = {
+      name: $('m-name').value.trim(), email: $('m-email').value.trim(), phone: $('m-phone').value.trim(),
+      tier: $('m-tier').value, status: $('m-status').value, joined: $('m-joined').value
+    };
+    if (!d.name || !d.email) { toast('Name and email are required'); return; }
+    if (window.__memberId == null) {
+      var maxId = state.members.reduce(function (m, x) { return Math.max(m, x.id); }, 0);
+      state.members.push({ id: maxId + 1, ...d });
+      toast('Member added');
+    } else {
+      Object.assign(state.members.find(function (x) { return x.id === window.__memberId; }), d);
+      toast('Member saved');
+    }
+    save(); closeOverlays(); renderMembers();
+  };
+  window.importCsv = function () {
+    openModal('Import members', 'Paste a CSV with headers — name,email,phone,tier,status,joined',
+      '<div class="field"><label>CSV</label><textarea id="csv-text" style="min-height:180px;font-family:var(--font-mono);font-size:var(--text-sm)" placeholder="name,email,phone,tier,status,joined&#10;J. Doe,jd@example.com,+1 (212) 555-0100,signature,active,2026-02-01"></textarea></div>' +
+      '<p class="field-hint">tier accepts residence | signature | atelier · status accepts active | paused | former</p>',
+      '<button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button>' +
+      '<button class="btn btn-primary" onclick="doImportCsv()">Import</button>');
+  };
+  window.doImportCsv = function () {
+    var text = $('csv-text').value.trim();
+    if (!text) { toast('Paste some CSV first'); return; }
+    var lines = text.split(/\r?\n/).filter(function (l) { return l.trim(); });
+    if (lines.length < 2) { toast('Needs a header row and at least one row'); return; }
+    var headers = lines[0].split(',').map(function (h) { return h.trim().toLowerCase(); });
+    var col = {};
+    ['name', 'email', 'phone', 'tier', 'status', 'joined'].forEach(function (k, i) {
+      col[k] = headers.indexOf(k);
+    });
+    if (col.name < 0 || col.email < 0) { toast('CSV needs a name and email column'); return; }
+    var maxId = state.members.reduce(function (m, x) { return Math.max(m, x.id); }, 0);
+    var added = 0;
+    lines.slice(1).forEach(function (line) {
+      var parts = line.split(',');
+      var name = (parts[col.name] || '').trim();
+      var email = (parts[col.email] || '').trim();
+      if (!name || !email) return;
+      state.members.push({
+        id: ++maxId,
+        name: name, email: email,
+        phone: (parts[col.phone] || '').trim(),
+        tier: (parts[col.tier] || 'residence').trim(),
+        status: (parts[col.status] || 'active').trim(),
+        joined: (parts[col.joined] || '').trim()
+      });
+      added++;
+    });
+    save(); closeOverlays(); renderMembers(); toast(added + ' member(s) imported');
+  };
+
+  /* ----- membership ----- */
+  function renderMembership() {
+    var cards = state.tiers.slice().sort(function (a, b) { return a.sort - b.sort; }).map(function (t, i) {
+      var price = t.price != null ? '$' + t.price + '<small>' + esc(t.billing) + '</small>' : '<small>' + esc(t.billing) + '</small>';
+      var feats = t.features.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
+      return '<article class="tier' + (t.featured ? ' featured' : '') + '">' +
+        '<div class="tier-head"><span class="tier-name">' + esc(t.name) + '</span><span class="badge ' + (t.published ? 'b-ok' : 'b-neutral') + '">' + (t.published ? 'Published' : 'Draft') + '</span></div>' +
+        '<div class="tier-price">' + price + '</div>' +
+        '<p class="tier-tagline">' + esc(t.tagline) + '</p>' +
+        '<ul>' + feats + '</ul>' +
+        '<div class="tier-actions"><button class="btn btn-ghost btn-sm" onclick="editTier(\'' + t.key + '\')">Edit</button>' +
+        '<span class="spacer"></span>' +
+        '<button class="btn btn-ghost btn-sm" onclick="moveTier(\'' + t.key + '\', -1)" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="moveTier(\'' + t.key + '\', 1)" ' + (i === state.tiers.length - 1 ? 'disabled' : '') + '>↓</button></div></article>';
+    }).join('');
+    $('view-membership').innerHTML =
+      '<div class="view-head"><div><h2>Membership tiers</h2><p class="view-desc">These render on the site’s Membership section. Prices and copy edit live.</p></div></div>' +
+      '<div class="tier-grid">' + cards + '</div>';
+  }
+  function tierFormHtml(t) {
+    return '<div class="field"><label>Name</label><input id="t-name" value="' + esc(t.name) + '"></div>' +
+      '<div class="field"><label>Price (leave empty for by-application)</label><input id="t-price" type="number" value="' + (t.price != null ? t.price : '') + '"></div>' +
+      '<div class="field"><label>Billing label</label><input id="t-billing" value="' + esc(t.billing) + '"></div>' +
+      '<div class="field"><label>Tagline</label><input id="t-tagline" value="' + esc(t.tagline) + '"></div>' +
+      '<div class="field"><label>Features (one per line)</label><textarea id="t-features" style="min-height:120px">' + esc(t.features.join('\n')) + '</textarea></div>' +
+      '<div class="field"><label>Featured (recommended tier)</label><select id="t-featured"><option value="false">No</option><option value="true"' + (t.featured ? ' selected' : '') + '>Yes</option></select></div>';
+  }
+  window.editTier = function (key) {
+    var t = state.tiers.find(function (x) { return x.key === key; });
+    if (!t) return;
+    window.__tierKey = key;
+    openModal('Edit tier', esc(t.name), tierFormHtml(t),
+      '<button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button>' +
+      '<button class="btn btn-primary" onclick="saveTier()">Save</button>');
+  };
+  window.saveTier = function () {
+    var t = state.tiers.find(function (x) { return x.key === window.__tierKey; });
+    if (!t) return;
+    var p = $('t-price').value.trim();
+    t.name = $('t-name').value.trim();
+    t.price = p === '' ? null : Number(p);
+    t.billing = $('t-billing').value.trim();
+    t.tagline = $('t-tagline').value.trim();
+    t.features = $('t-features').value.split('\n').map(function (f) { return f.trim(); }).filter(Boolean);
+    t.featured = $('t-featured').value === 'true';
+    save(); closeOverlays(); renderMembership(); toast('Tier saved');
+  };
+  window.moveTier = function (key, dir) {
+    var i = state.tiers.findIndex(function (x) { return x.key === key; });
+    var j = i + dir;
+    if (i < 0 || j < 0 || j >= state.tiers.length) return;
+    var tmp = state.tiers[i].sort; state.tiers[i].sort = state.tiers[j].sort; state.tiers[j].sort = tmp;
+    save(); renderMembership();
+  };
+
+  /* ----- blog ----- */
+  window.__editingPost = null;
+  function renderBlog() {
+    var list = state.posts.slice().sort(function (a, b) {
+      var x = a.updated || 0, y = b.updated || 0; return new Date(y) - new Date(x);
+    });
+    var rows = list.map(function (p) {
+      var statusBadge = p.status === 'published' ? '<span class="badge b-ok">Published</span>' : '<span class="badge b-neutral">Draft</span>';
+      var pub = p.publishedAt ? fmtDate(p.publishedAt) : '—';
+      return '<div class="post-row"><div class="post-main"><strong>' + esc(p.title) + '</strong>' +
+        '<div class="post-meta">' + esc(p.slug) + ' · Updated ' + fmtDate(p.updated) + '</div></div>' +
+        '<div class="post-actions">' + statusBadge +
+        '<button class="btn btn-ghost btn-sm" onclick="togglePost(' + p.id + ')">' + (p.status === 'published' ? 'Unpublish' : 'Publish') + '</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="editPost(' + p.id + ')">Edit</button>' +
+        '<button class="btn btn-danger btn-sm" onclick="deletePost(' + p.id + ')">Delete</button></div></div>';
+    }).join('');
+    $('view-blog').innerHTML =
+      '<div class="view-head"><div><h2>Journal</h2><p class="view-desc">Published posts appear on the landing page Journal section, newest first.</p></div>' +
+      '<button class="btn btn-primary" onclick="newPost()">New post</button></div>' +
+      (list.length ? '<div class="panel" style="padding-top:0">' + rows + '</div>' : '<div class="empty">No posts yet — write the first one</div>');
+  }
+  function postEditorHtml(p) {
+    return '<div class="editor-grid">' +
+      '<div class="editor-pane">' +
+      '<div class="field"><label>Title</label><input id="p-title" value="' + esc(p.title) + '" oninput="autoSlug()"></div>' +
+      '<div class="field"><label>Slug</label><input id="p-slug" value="' + esc(p.slug) + '" oninput="this.dataset.touched=\'1\'"></div>' +
+      '<div class="field"><label>Excerpt</label><textarea id="p-excerpt" style="min-height:70px">' + esc(p.excerpt) + '</textarea></div>' +
+      '<div class="field"><label>Cover image URL</label><input id="p-cover" value="' + esc(p.cover) + '" oninput="coverPreview()"></div>' +
+      '<div id="cover-box" class="cover-preview">Cover appears here</div>' +
+      '<div class="field"><label>Body · Markdown</label><textarea id="p-body" class="mono" oninput="bodyPreview()">' + esc(p.body) + '</textarea></div>' +
+      '</div><div class="editor-pane"><div class="field"><label>Status</label><select id="p-status"><option value="draft"' + (p.status === 'draft' ? ' selected' : '') + '>Draft</option><option value="published"' + (p.status === 'published' ? ' selected' : '') + '>Published</option></select></div>' +
+      '<div class="field"><label>Preview</label><div class="preview" id="pv"><div class="pv-meta">' + esc(p.slug) + '</div>' + renderMd(p.body) + '</div></div>' +
+      '</div></div>';
+  }
+  window.newPost = function () {
+    window.__editingPost = null;
+    var blank = { slug: '', title: '', excerpt: '', body: '', cover: '', status: 'draft' };
+    openDrawer('New post', 'Write it, preview it, publish it', postEditorHtml(blank),
+      '<button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button><span style="flex:1"></span>' +
+      '<button class="btn btn-ghost" onclick="savePost(\'draft\')">Save draft</button>' +
+      '<button class="btn btn-primary" onclick="savePost(\'published\')">Publish</button>');
+    window.coverPreview(); window.bodyPreview();
+  };
+  window.editPost = function (id) {
+    var p = state.posts.find(function (x) { return x.id === id; });
+    if (!p) return;
+    window.__editingPost = p;
+    openDrawer('Edit post', '#' + p.id + ' · ' + esc(p.slug), postEditorHtml(p),
+      '<button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button><span style="flex:1"></span>' +
+      '<button class="btn btn-ghost" onclick="savePost(\'draft\')">Save draft</button>' +
+      '<button class="btn btn-primary" onclick="savePost(\'published\')">Publish</button>');
+    window.coverPreview(); window.bodyPreview();
+  };
+  window.autoSlug = function () {
+    if (window.__editingPost === null || $('p-slug').dataset.touched) return;
+    var slug = $('p-title').value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    $('p-slug').value = slug;
+    $('pv').querySelector('.pv-meta').textContent = slug;
+  };
+  window.coverPreview = function () {
+    var url = $('p-cover').value.trim();
+    $('cover-box').innerHTML = url ? '<img src="' + esc(url) + '" alt="Cover preview">' : 'Cover appears here';
+  };
+  window.bodyPreview = function () {
+    var el = $('pv');
+    if (!el) return;
+    el.innerHTML = '<div class="pv-meta">' + esc($('p-slug').value.trim()) + '</div>' + renderMd($('p-body').value);
+  };
+  window.savePost = function (status) {
+    var title = $('p-title').value.trim();
+    var slug = $('p-slug').value.trim() || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    if (!title || !slug) { toast('Title and slug are required'); return; }
+    var data = {
+      title: title, slug: slug, excerpt: $('p-excerpt').value.trim(),
+      body: $('p-body').value, cover: $('p-cover').value.trim(), status: status
+    };
+    var now = new Date().toISOString();
+    if (window.__editingPost) {
+      var was = window.__editingPost.status;
+      Object.assign(window.__editingPost, data, { updated: now });
+      if (status === 'published' && was !== 'published') window.__editingPost.publishedAt = now;
+      if (status !== 'published') window.__editingPost.publishedAt = null;
+    } else {
+      var maxId = state.posts.reduce(function (m, p) { return Math.max(m, p.id); }, 0);
+      state.posts.push({ id: maxId + 1, ...data, publishedAt: status === 'published' ? now : null, updated: now });
+    }
+    save(); closeOverlays(); renderBlog(); toast(status === 'published' ? 'Post published' : 'Draft saved');
+  };
+  window.togglePost = function (id) {
+    var p = state.posts.find(function (x) { return x.id === id; });
+    if (!p) return;
+    var now = new Date().toISOString();
+    if (p.status === 'published') { p.status = 'draft'; p.publishedAt = null; }
+    else { p.status = 'published'; p.publishedAt = now; }
+    p.updated = now;
+    save(); renderBlog(); toast(p.status === 'published' ? 'Post published' : 'Post unpublished');
+  };
+  window.deletePost = function (id) {
+    if (!confirm('Delete this post permanently?')) return;
+    state.posts = state.posts.filter(function (p) { return p.id !== id; });
+    save(); renderBlog(); toast('Post deleted');
+  };
+
+  /* ----- settings ----- */
+  function renderSettings() {
+    var s = state.settings;
+    $('view-settings').innerHTML =
+      '<div class="view-head"><div><h2>Settings</h2><p class="view-desc">Copy that renders on the landing page, plus notification behaviour.</p></div></div>' +
+      '<div class="panel"><div class="panel-head"><h3>Page content</h3><span class="panel-meta">Renders live on the site</span></div>' +
+      '<div class="field"><label>Hero eyebrow</label><input id="s-eyebrow" value="' + esc(s.heroEyebrow) + '"></div>' +
+      '<div class="field"><label>Primary CTA label</label><input id="s-cta" value="' + esc(s.ctaPrimary) + '"></div>' +
+      '<div class="field"><label>Form CTA label</label><input id="s-cta2" value="' + esc(s.ctaTour) + '"></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">' +
+      '<div class="field"><label>Phone</label><input id="s-phone" value="' + esc(s.phone) + '"></div>' +
+      '<div class="field"><label>Email</label><input id="s-email" value="' + esc(s.email) + '"></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">' +
+      '<div class="field"><label>Club hours</label><input id="s-hours" value="' + esc(s.hoursClub) + '"></div>' +
+      '<div class="field"><label>Concierge hours</label><input id="s-hours2" value="' + esc(s.hoursConcierge) + '"></div></div>' +
+      '<button class="btn btn-primary" onclick="saveSettings()">Save page content</button></div>' +
+      '<div class="panel"><div class="panel-head"><h3>Notifications</h3><span class="panel-meta">Concierge alerts on new leads</span></div>' +
+      '<label class="switch"><input type="checkbox" id="s-alerts" ' + (s.emailAlerts ? 'checked' : 'disabled') + '><span class="track"></span><span>Email alerts on new leads</span></label>' +
+      (s.emailAlerts ? '' : '<p class="field-hint" style="margin-top:var(--space-3)">SMTP is not configured yet — set SMTP_HOST / SMTP_USER / SMTP_PASS and SMTP_FROM in the server env, then activate this switch. The alert logic is already implemented.</p>') +
+      '</div>' +
+      '<div class="panel" style="border-color:color-mix(in oklab, var(--danger), transparent 60%)"><div class="panel-head"><h3>Data</h3><span class="panel-meta">This prototype stores everything in localStorage</span></div>' +
+      '<p class="view-desc" style="margin-bottom:var(--space-4)">In the real app this data lives in the SQLite `noir.db` file — leads, members, tiers, posts, settings.</p>' +
+      '<button class="btn btn-danger" onclick="resetDemo()">Reset demo data</button></div>';
+  }
+  window.saveSettings = function () {
+    var s = state.settings;
+    s.heroEyebrow = $('s-eyebrow').value.trim();
+    s.ctaPrimary = $('s-cta').value.trim();
+    s.ctaTour = $('s-cta2').value.trim();
+    s.phone = $('s-phone').value.trim();
+    s.email = $('s-email').value.trim();
+    s.hoursClub = $('s-hours').value.trim();
+    s.hoursConcierge = $('s-hours2').value.trim();
+    save(); renderSettings(); toast('Page content saved');
+  };
+
+  window.resetDemo = function () {
+    if (!confirm('Reset all data to the demo seed?')) return;
+    state = seed();
+    save();
+    var view = sessionStorage.getItem('noir_view') || 'dashboard';
+    go(view);
+    toast('Demo data reset');
+  };
+
+  var render = {
+    dashboard: renderDashboard,
+    leads: renderLeads,
+    members: renderMembers,
+    membership: renderMembership,
+    blog: renderBlog,
+    settings: renderSettings
+  };
+
+  /* init */
+  (function init() {
+    var authed = false;
+    try { authed = sessionStorage.getItem('noir_admin') === '1'; } catch (e) {}
+    if (authed) {
+      $('screen-login').hidden = true;
+      $('screen-app').hidden = false;
+      go(sessionStorage.getItem('noir_view') || 'dashboard');
+    }
+  })();
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeOverlays();
+  });
+})();
+</script>
+</body>
+</html>

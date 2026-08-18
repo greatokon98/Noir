@@ -1,0 +1,85 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+<%
+  var featureCount = tiers.length;
+%>
+
+<div class="view" data-od-id="admin-tiers">
+  <div class="view-head">
+    <div>
+      <h2>Membership</h2>
+      <p class="view-desc">Three tiers — managed here, rendered on the site. Signature is the featured tier.</p>
+    </div>
+  </div>
+
+  <div class="tier-grid">
+    <% tiers.forEach(function (t, i) { %>
+    <div class="tier<%= t.key === 'signature' ? ' featured' : '' %>">
+      <div class="tier-head">
+        <span class="tier-name"><%= t.name %></span>
+        <span class="badge <%= t.published ? 'b-accent' : 'b-neutral' %>"><%= t.published ? 'Published' : 'Hidden' %></span>
+      </div>
+      <div class="tier-price"><%= t.price_monthly ? '$' + t.price_monthly : '—' %> <small><%= t.billing_label %></small></div>
+      <p class="tier-tagline"><%= t.tagline %></p>
+      <ul>
+        <% t.features.forEach(function (f) { %>
+        <li><%= f %></li>
+        <% }); %>
+      </ul>
+      <div class="tier-actions">
+        <button class="btn btn-ghost btn-sm" type="button" data-od-id="edit-tier-<%= t.key %>" onclick="document.getElementById('tier-edit-<%= t.id %>').hidden = !document.getElementById('tier-edit-<%= t.id %>').hidden">Edit</button>
+        <form method="post" action="/admin/tiers/<%= t.id %>/publish">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn btn-ghost btn-sm" type="submit"><%= t.published ? 'Hide' : 'Publish' %></button>
+        </form>
+        <span class="spacer"></span>
+        <% if (i > 0) { %>
+        <form method="post" action="/admin/tiers/<%= t.id %>/move">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="dir" value="up">
+          <button class="btn btn-ghost btn-sm" type="submit" aria-label="Move <%= t.name %> up">↑</button>
+        </form>
+        <% } %>
+        <% if (i < featureCount - 1) { %>
+        <form method="post" action="/admin/tiers/<%= t.id %>/move">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="dir" value="down">
+          <button class="btn btn-ghost btn-sm" type="submit" aria-label="Move <%= t.name %> down">↓</button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <% tiers.forEach(function (t) { %>
+  <form class="panel" id="tier-edit-<%= t.id %>" method="post" action="/admin/tiers/<%= t.id %>" hidden>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="panel-head"><h3>Edit <%= t.name %></h3><span class="panel-meta"><%= t.key %></span></div>
+    <div class="grid-3">
+      <div class="field"><label>Name</label><input name="name" value="<%= t.name %>" required></div>
+      <div class="field"><label>Price / month</label><input name="price_monthly" type="number" min="0" value="<%= t.price_monthly == null ? '' : t.price_monthly %>" placeholder="Leave empty for by application"></div>
+      <div class="field"><label>Billing label</label><input name="billing_label" value="<%= t.billing_label %>" required></div>
+    </div>
+    <div class="field"><label>Tagline</label><input name="tagline" value="<%= t.tagline %>" required></div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Features — one per line</label>
+        <textarea class="mono" name="features" style="min-height:120px"><%= t.features.join('\n') %></textarea>
+      </div>
+      <div class="field">
+        <label>Order</label>
+        <input name="sort_order" type="number" min="1" value="<%= t.sort_order %>">
+        <label class="switch" style="margin-top:var(--space-4)">
+          <input type="checkbox" name="published" value="1"<%= t.published ? ' checked' : '' %>>
+          <span class="track"></span>
+          <span>Visible on the site</span>
+        </label>
+      </div>
+    </div>
+    <div class="editor-actions"><span class="spacer"></span><button class="btn btn-primary" type="submit">Save tier</button></div>
+  </form>
+  <% }); %>
+</div>
+
+<%- include('partials/foot') %>

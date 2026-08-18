@@ -1,0 +1,26 @@
+<%- include('partials/head') %>
+<div class="login">
+  <form class="login-card" method="post" action="/admin/login" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <a class="login-wordmark" href="/">
+      <strong>NOIR</strong>
+      <span>Private Fitness Club · Admin</span>
+    </a>
+    <h1>Sign in to the desk.</h1>
+    <p class="login-sub">Concierge access. Sessions last 24 hours.</p>
+    <% if (loginError) { %>
+    <p class="login-error"><%= loginError %></p>
+    <% } %>
+    <div class="field">
+      <label for="l-email">Email</label>
+      <input id="l-email" name="email" type="email" autocomplete="username" placeholder="you@noirclub.com" required>
+    </div>
+    <div class="field">
+      <label for="l-pass">Password</label>
+      <input id="l-pass" name="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn-primary" type="submit" style="width:100%">Sign in</button>
+  </form>
+</div>
+</body>
+</html>

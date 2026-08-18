@@ -1,0 +1,11 @@
+node_modules
+.env
+noir.db
+*.db-journal
+.git
+.gitignore
+.DS_Store
+smoke-test.js
+Dockerfile
+.dockerignore
+README.md

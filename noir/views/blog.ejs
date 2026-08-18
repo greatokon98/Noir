@@ -1,0 +1,50 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+<%
+  var statusBadge = { published: 'b-ok', draft: 'b-warn' };
+  var statusLabel = { published: 'Published', draft: 'Draft' };
+  function fmtDate(ts) {
+    if (!ts) return '—';
+    var d = new Date(ts);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+%>
+
+<div class="view" data-od-id="admin-blog">
+  <div class="view-head">
+    <div>
+      <h2>Journal</h2>
+      <p class="view-desc">Published posts appear on the landing page Journal section, newest first.</p>
+    </div>
+    <a class="btn btn-primary" href="/admin/blog/new" data-od-id="cta-new-post">New post</a>
+  </div>
+
+  <% if (posts.length) { %>
+  <div class="panel" style="padding-top:0">
+    <% posts.forEach(function (p) { %>
+    <div class="post-row">
+      <div class="post-main">
+        <strong><%= p.title %></strong>
+        <div class="post-meta"><%= p.slug %> · Updated <%= fmtDate(p.updated_at) %></div>
+      </div>
+      <div class="post-actions">
+        <span class="badge <%= statusBadge[p.status] || 'b-neutral' %>"><%= statusLabel[p.status] || p.status %></span>
+        <form method="post" action="/admin/blog/<%= p.id %>/publish">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn btn-ghost btn-sm" type="submit"><%= p.status === 'published' ? 'Unpublish' : 'Publish' %></button>
+        </form>
+        <a class="btn btn-ghost btn-sm" href="/admin/blog/<%= p.id %>/edit">Edit</a>
+        <form method="post" action="/admin/blog/<%= p.id %>/delete" onsubmit="return confirm('Delete this post permanently?')">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+  <% } else { %>
+  <div class="empty">No posts yet — write the first one</div>
+  <% } %>
+</div>
+
+<%- include('partials/foot') %>

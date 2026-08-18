@@ -1,0 +1,99 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+
+<div class="view" data-od-id="admin-blog-editor">
+  <div class="view-head">
+    <div>
+      <h2><%= post.id ? 'Edit post' : 'New post' %></h2>
+      <p class="view-desc"><%= post.id ? '#' + post.id + ' · ' + post.slug : 'Write it, preview it, publish it' %></p>
+    </div>
+    <a class="text-link" href="/admin/blog">Back to Journal <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+
+  <form method="post" action="<%= post.id ? '/admin/blog/' + post.id : '/admin/blog' %>" id="editor-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="editor-grid">
+      <div class="editor-pane">
+        <div class="field"><label for="p-title">Title</label><input id="p-title" name="title" value="<%= post.title %>" required></div>
+        <div class="field"><label for="p-slug">Slug</label><input id="p-slug" name="slug" value="<%= post.slug %>" required></div>
+        <div class="field"><label for="p-excerpt">Excerpt</label><textarea id="p-excerpt" name="excerpt" style="min-height:70px"><%= post.excerpt %></textarea></div>
+        <div class="field"><label for="p-cover">Cover image URL</label><input id="p-cover" name="cover_image" value="<%= post.cover_image %>" placeholder="https://…"></div>
+        <div id="cover-box" class="cover-preview"><% if (post.cover_image) { %><img src="<%= post.cover_image %>" alt="Cover preview"><% } else { %>Cover appears here<% } %></div>
+        <div class="field"><label for="p-body">Body · Markdown</label><textarea id="p-body" name="body" class="mono"><%= post.body_markdown %></textarea></div>
+      </div>
+      <div class="editor-pane">
+        <div class="field">
+          <label for="p-status">Status</label>
+          <select id="p-status" name="status_select">
+            <option value="draft"<%= post.status === 'draft' ? ' selected' : '' %>>Draft</option>
+            <option value="published"<%= post.status === 'published' ? ' selected' : '' %>>Published</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Preview</label>
+          <div class="preview" id="pv"><div class="pv-meta"><%= post.slug %></div><%- previewHtml %></div>
+        </div>
+      </div>
+    </div>
+    <div class="editor-actions">
+      <span class="spacer"></span>
+      <button class="btn btn-ghost" type="submit" name="status" value="draft">Save draft</button>
+      <button class="btn btn-primary" type="submit" name="status" value="published" data-od-id="cta-publish-post">Publish</button>
+    </div>
+  </form>
+</div>
+
+<script>
+(function () {
+  var title = document.getElementById('p-title');
+  var slug = document.getElementById('p-slug');
+  var body = document.getElementById('p-body');
+  var cover = document.getElementById('p-cover');
+  var pv = document.getElementById('pv');
+  var coverBox = document.getElementById('cover-box');
+  var slugTouched = slug.dataset.touched === '1';
+
+  function slugify(s) {
+    return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function renderMd(md) {
+    var lines = String(md || '').split('\n');
+    var html = [], inList = false;
+    lines.forEach(function (line) {
+      var t = esc(line.trim());
+      if (/^## /.test(t)) { if (inList) { html.push('</ul>'); inList = false; } html.push('<h3>' + t.replace(/^## /, '') + '</h3>'); return; }
+      if (/^# /.test(t)) { if (inList) { html.push('</ul>'); inList = false; } html.push('<h2>' + t.replace(/^# /, '') + '</h2>'); return; }
+      if (/^[-*] /.test(t)) { if (!inList) { html.push('<ul>'); inList = true; } html.push('<li>' + t.replace(/^[-*] /, '') + '</li>'); return; }
+      if (/^> /.test(t)) { if (inList) { html.push('</ul>'); inList = false; } html.push('<blockquote>' + t.replace(/^> /, '') + '</blockquote>'); return; }
+      if (inList) { html.push('</ul>'); inList = false; }
+      if (t === '') return;
+      html.push('<p>' + t + '</p>');
+    });
+    if (inList) html.push('</ul>');
+    return html.join('').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\B\*([^*\n]+)\*\B/g, '<em>$1</em>');
+  }
+
+  function bodyPreview() {
+    pv.innerHTML = '<div class="pv-meta">' + esc(slug.value.trim() || slugify(title.value)) + '</div>' + renderMd(body.value);
+  }
+  function coverPreview() {
+    var url = cover.value.trim();
+    coverBox.innerHTML = url ? '<img src="' + esc(url) + '" alt="Cover preview">' : 'Cover appears here';
+  }
+
+  title.addEventListener('input', function () {
+    if (!slugTouched) slug.value = slugify(title.value);
+    bodyPreview();
+  });
+  slug.addEventListener('input', function () { slugTouched = true; bodyPreview(); });
+  body.addEventListener('input', bodyPreview);
+  cover.addEventListener('input', coverPreview);
+})();
+</script>
+
+<%- include('partials/foot') %>

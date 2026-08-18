@@ -1,0 +1,64 @@
+<%- include('partials/head') %>
+<%- include('partials/rail') %>
+<%
+  var badgeCls = { new: 'b-accent', contacted: 'b-warn', toured: 'b-neutral', converted: 'b-ok', declined: 'b-bad' };
+  var statusLabel = { new: 'New', contacted: 'Contacted', toured: 'Toured', converted: 'Converted', declined: 'Declined' };
+  var pipeFill = { new: 'f-accent', contacted: 'f-warn', toured: 'f-neutral', converted: 'f-ok', declined: 'f-bad' };
+  var order = ['new', 'contacted', 'toured', 'converted', 'declined'];
+  var total = totalLeads || 1;
+  function fmtDate(ts) {
+    if (!ts) return '—';
+    var d = new Date(ts);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+%>
+
+<div class="view" data-od-id="admin-dashboard">
+  <% if (!emailAlerts) { %>
+  <div class="notice"><span><b>Email alerts are not yet implemented.</b> The settings toggle is ready, but SMTP integration (nodemailer) still needs to be built.</span></div>
+  <% } %>
+
+  <div class="stat-grid">
+    <div class="stat"><span class="stat-num"><%= leadsThisWeek %></span><span class="stat-label">New leads this week</span><span class="stat-note">From the tour form</span></div>
+    <div class="stat"><span class="stat-num"><%= counts.new %></span><span class="stat-label">Awaiting contact</span><span class="stat-note">Never left on read</span></div>
+    <div class="stat"><span class="stat-num"><%= activeMembers %></span><span class="stat-label">Active members</span><span class="stat-note">Cap 420</span></div>
+    <div class="stat"><span class="stat-num"><%= publishedPosts %></span><span class="stat-label">Published posts</span><span class="stat-note">Journal on the site</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h3>Lead pipeline</h3><span class="panel-meta"><%= totalLeads %> total</span></div>
+    <div class="pipe">
+      <% order.forEach(function (s) { %>
+        <% var pct = Math.round((counts[s] / total) * 100); %>
+        <div class="pipe-row">
+          <span class="pipe-label"><%= statusLabel[s] %></span>
+          <div class="pipe-track"><div class="pipe-fill <%= pipeFill[s] %>" style="width:<%= pct %>%"></div></div>
+          <span class="pipe-count"><%= counts[s] %></span>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <div class="panel panel-flush">
+    <div class="panel-head" style="padding:var(--space-6) var(--space-6) 0">
+      <h3>Latest requests</h3>
+      <a class="text-link" href="/admin/leads">Open leads <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+    <div class="table-wrap" style="padding:0 var(--space-4) var(--space-4)">
+      <table>
+        <thead><tr><th>Name</th><th>Status</th><th>Received</th></tr></thead>
+        <tbody>
+          <% recentLeads.forEach(function (l) { %>
+          <tr>
+            <td><strong><%= l.name %></strong><div class="cell-sub"><%= l.email %></div></td>
+            <td><span class="badge <%= badgeCls[l.status] || 'b-neutral' %>"><%= statusLabel[l.status] || l.status %></span></td>
+            <td><%= fmtDate(l.created_at) %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/foot') %>
