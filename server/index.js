@@ -85,7 +85,18 @@ app.set('views', path.join(__dirname, '../views'));
 
 app.use(express.json({ limit: '32kb' }));
 app.use(express.urlencoded({ extended: false, limit: '32kb' }));
-app.use(session(sessionConfig));
+
+// Session middleware — wrapped to survive store/DB failures on cold start
+const sess = session(sessionConfig);
+app.use((req, res, next) => {
+  sess(req, res, (err) => {
+    if (err) {
+      console.error('Session middleware error:', err.message);
+      req.session = {};
+    }
+    next();
+  });
+});
 
 // Vercel serves static from public/ — express.static used for local dev only
 app.use(express.static(path.join(__dirname, '../public')));
@@ -152,9 +163,14 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong on our side.');
 });
 
+// --- Schema init (idempotent — runs on all environments) ---------------------
+ensureSchema().catch((err) => {
+  console.error('Schema init failed:', err.message);
+});
+
 // --- Server startup ---------------------------------------------------------
 // On Vercel: app is exported as a serverless function (no listen needed).
-// Locally: ensureSchema + app.listen for development.
+// Locally: app.listen for development.
 if (!process.env.VERCEL) {
   process.on('unhandledRejection', (err) => {
     console.error('Unhandled rejection:', err);

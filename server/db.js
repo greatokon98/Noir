@@ -11,6 +11,10 @@ const pool = new Pool({
   connectionTimeoutMillis: 10000
 });
 
+pool.on('error', (err) => {
+  console.error('Unexpected pool idle error:', err.message);
+});
+
 // Schema initialization — runs once on cold start
 let schemaReady = false;
 

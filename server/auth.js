@@ -43,6 +43,10 @@ const sessionConfig = {
 };
 
 // Generates a per-session CSRF token and exposes it to templates via res.locals.
+sessionConfig.store.on('error', (err) => {
+  console.error('Session store error:', err.message);
+});
+
 function ensureCsrf(req, res, next) {
   if (!req.session.csrfToken) {
     req.session.csrfToken = crypto.randomBytes(24).toString('hex');
