@@ -1,15 +1,10 @@
 {
-  "buildCommand": null,
-  "outputDirectory": null,
-  "framework": null,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "cd noir && npm install",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/noir/server/index.js"
+      "destination": "/index.js"
     }
-  ],
-  "includeFiles": [
-    "noir/**"
   ]
 }
