@@ -153,23 +153,24 @@ app.use((err, req, res, next) => {
 });
 
 // --- Server startup ---------------------------------------------------------
-// On Vercel, the app is exported (no listen). Locally, it starts a server.
-if (require.main === module) {
-  process.on('unhandledRejection', (err) => {
-    console.error('Unhandled rejection:', err);
-  });
-  process.on('uncaughtException', (err) => {
-    console.error('Uncaught exception:', err);
-    process.exit(1);
-  });
+// Vercel detects the Express app by seeing app.listen() during module load.
+// On Vercel the port is ignored; locally it starts a real server.
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled rejection:', err);
+});
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+  process.exit(1);
+});
 
-  let server;
-  let isShuttingDown = false;
+let server;
+let isShuttingDown = false;
 
-  function shutdown(signal) {
-    if (isShuttingDown) return;
-    isShuttingDown = true;
-    console.log(`\n${signal} received — shutting down gracefully...`);
+function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(`\n${signal} received — shutting down gracefully...`);
+  if (server) {
     server.close(() => {
       console.log('HTTP server closed.');
       process.exit(0);
@@ -178,20 +179,22 @@ if (require.main === module) {
       console.error('Forced shutdown after timeout.');
       process.exit(1);
     }, 10000).unref();
+  } else {
+    process.exit(0);
   }
-
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT', () => shutdown('SIGINT'));
-
-  // Ensure schema exists before starting
-  ensureSchema().then(() => {
-    server = app.listen(PORT, () => {
-      console.log(`NOIR admin + API running at http://localhost:${PORT}`);
-    });
-  }).catch((err) => {
-    console.error('Failed to initialize database:', err);
-    process.exit(1);
-  });
 }
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+// Ensure schema exists, then start listening
+ensureSchema().then(() => {
+  server = app.listen(PORT, () => {
+    console.log(`NOIR admin + API running at http://localhost:${PORT}`);
+  });
+}).catch((err) => {
+  console.error('Failed to initialize database:', err);
+  process.exit(1);
+});
 
 module.exports = app;
