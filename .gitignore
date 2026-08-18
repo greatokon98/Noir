@@ -1,1 +1,8 @@
+node_modules/
+.env
+noir.db
+noir.db-journal
+noir.db-wal
+noir.db-shm
+*.log
 .DS_Store

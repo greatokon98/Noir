@@ -1,1 +1,1 @@
-module.exports = require('./noir/server/index');
+module.exports = require('./server/index');
