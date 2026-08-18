@@ -65,12 +65,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
   value TEXT
 );
 
-CREATE TABLE IF NOT EXISTS sessions (
-  sid TEXT PRIMARY KEY,
-  sess JSONB NOT NULL,
-  expired TIMESTAMPTZ NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_sessions_expired ON sessions (expired);
+-- sessions table is managed by connect-pg-simple — do NOT create it here
 
 CREATE TABLE IF NOT EXISTS rate_limits (
   key TEXT PRIMARY KEY,

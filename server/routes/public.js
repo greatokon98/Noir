@@ -71,60 +71,72 @@ const PUBLIC_SETTINGS = [
   'phone', 'email', 'hours_club', 'hours_concierge'
 ];
 
-router.get('/settings', async (req, res) => {
-  const rows = await all('SELECT key, value FROM site_settings');
-  const map = {};
-  rows.forEach((r) => { map[r.key] = r.value; });
-  const body = {};
-  PUBLIC_SETTINGS.forEach((key) => {
-    body[key] = typeof map[key] === 'string' ? map[key] : '';
-  });
-  res.json(body);
+router.get('/settings', async (req, res, next) => {
+  try {
+    const rows = await all('SELECT key, value FROM site_settings');
+    const map = {};
+    rows.forEach((r) => { map[r.key] = r.value; });
+    const body = {};
+    PUBLIC_SETTINGS.forEach((key) => {
+      body[key] = typeof map[key] === 'string' ? map[key] : '';
+    });
+    res.json(body);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /api/blog — published posts, newest first.
-router.get('/blog', async (req, res) => {
-  const posts = await all(
-    `SELECT id, slug, title, excerpt, body_markdown, cover_image, published_at
-     FROM blog_posts
-     WHERE status = 'published' AND published_at IS NOT NULL
-     ORDER BY published_at DESC`
-  );
-  res.json(posts.map((p) => ({
-    id: p.id,
-    slug: p.slug,
-    title: p.title,
-    excerpt: p.excerpt,
-    body_html: md.render(p.body_markdown),
-    cover_image: p.cover_image,
-    published_at: p.published_at
-  })));
+router.get('/blog', async (req, res, next) => {
+  try {
+    const posts = await all(
+      `SELECT id, slug, title, excerpt, body_markdown, cover_image, published_at
+       FROM blog_posts
+       WHERE status = 'published' AND published_at IS NOT NULL
+       ORDER BY published_at DESC`
+    );
+    res.json(posts.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      body_html: md.render(p.body_markdown),
+      cover_image: p.cover_image,
+      published_at: p.published_at
+    })));
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /api/blog/:slug — single published post by slug.
-router.get('/blog/:slug', apiLimiter, async (req, res) => {
-  const slug = String(req.params.slug || '').trim();
-  if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
-    return res.status(400).json({ error: 'Invalid slug.' });
+router.get('/blog/:slug', apiLimiter, async (req, res, next) => {
+  try {
+    const slug = String(req.params.slug || '').trim();
+    if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+      return res.status(400).json({ error: 'Invalid slug.' });
+    }
+    const post = await get(
+      `SELECT id, slug, title, excerpt, body_markdown, cover_image, published_at
+       FROM blog_posts
+       WHERE slug = $1 AND status = 'published' AND published_at IS NOT NULL`,
+      [slug]
+    );
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found.' });
+    }
+    return res.json({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      excerpt: post.excerpt,
+      body_html: md.render(post.body_markdown),
+      cover_image: post.cover_image,
+      published_at: post.published_at
+    });
+  } catch (err) {
+    next(err);
   }
-  const post = await get(
-    `SELECT id, slug, title, excerpt, body_markdown, cover_image, published_at
-     FROM blog_posts
-     WHERE slug = $1 AND status = 'published' AND published_at IS NOT NULL`,
-    [slug]
-  );
-  if (!post) {
-    return res.status(404).json({ error: 'Post not found.' });
-  }
-  return res.json({
-    id: post.id,
-    slug: post.slug,
-    title: post.title,
-    excerpt: post.excerpt,
-    body_html: md.render(post.body_markdown),
-    cover_image: post.cover_image,
-    published_at: post.published_at
-  });
 });
 
 module.exports = router;
