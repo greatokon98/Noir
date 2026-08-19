@@ -205,6 +205,72 @@ ensureSchema().then(async () => {
         [key, value]
       );
     }
+
+    // Seed sample blog posts
+    const now = new Date();
+    function daysAgo(n, h) { const d = new Date(now); d.setDate(d.getDate() - n); if (h !== undefined) d.setHours(h, 0, 0, 0); return d.toISOString(); }
+    const blogPosts = [
+      {
+        slug: 'why-we-test-every-six-weeks', title: 'Why we test every six weeks',
+        excerpt: "Numbers you can defend beat goals you can't. What the retest tells us — and what it doesn't.",
+        body: "## Numbers you can defend\n\nEvery six weeks we re-run the same five lifts. Not because the number is the point, but because it is honest.\n\n**What the retest tells us:** whether the last block actually moved the needle.\n\nWhat it does not tell us is everything else. Sleep, stress, the week you had. We read the number, then we read the context.",
+        status: 'published', published_at: daysAgo(2, 7)
+      },
+      {
+        slug: 'the-plunge-is-a-skill', title: 'The plunge is a skill',
+        excerpt: 'Four degrees is not a punishment. It is a practice with a technique — and you can learn it.',
+        body: "## Four degrees is not a punishment\n\nThe plunge is not a dare. It is a skill with an entry point and a progression, and it responds to practice the same way a squat does.\n\nStart warm. Breathe. Build time in increments, not heroics. **The goal is to come back.**",
+        status: 'published', published_at: daysAgo(9, 7)
+      },
+      {
+        slug: 'food-for-your-actual-week', title: 'Food for your actual week',
+        excerpt: 'A nutrition plan fails when it assumes a perfect week. So we write for the week you actually have.',
+        body: "## Write for the week you have\n\nTravel, dinners, the morning you forget to eat. The plan that survives is the one built around those — not around a fantasy schedule.\n\n*It is not about willpower. It is about structure.*",
+        status: 'published', published_at: daysAgo(20, 7)
+      }
+    ];
+    for (const p of blogPosts) {
+      await run(
+        `INSERT INTO blog_posts (slug, title, excerpt, body_markdown, cover_image, status, published_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (slug) DO NOTHING`,
+        [p.slug, p.title, p.excerpt, p.body, '', p.status, p.published_at, p.published_at]
+      );
+    }
+
+    // Seed sample members
+    const members = [
+      { name: 'M. Ferreira', email: 'mf@example.com', phone: '+1 (718) 555-0166', tier_id: 'signature', status: 'active', joined_at: '2026-01-28' },
+      { name: 'G. Antonelli', email: 'ga@example.com', phone: '+1 (212) 555-0189', tier_id: 'residence', status: 'active', joined_at: '2025-11-04' },
+      { name: 'R. Beaumont', email: 'rb@example.com', phone: '+1 (917) 555-0155', tier_id: 'atelier', status: 'active', joined_at: '2024-06-19' },
+      { name: 'H. Okafor', email: 'ho@example.com', phone: '+1 (646) 555-0137', tier_id: 'signature', status: 'paused', joined_at: '2025-03-12' },
+      { name: 'P. Larsson', email: 'pl@example.com', phone: '+1 (212) 555-0161', tier_id: 'residence', status: 'former', joined_at: '2023-09-01' }
+    ];
+    for (const m of members) {
+      await run(
+        `INSERT INTO members (name, email, phone, tier_id, status, joined_at, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (email) DO NOTHING`,
+        [m.name, m.email, m.phone, m.tier_id, m.status, m.joined_at, new Date().toISOString(), new Date().toISOString()]
+      );
+    }
+
+    // Seed sample leads
+    const leads = [
+      { name: 'J. Mercier', email: 'jm@example.com', phone: '+1 (212) 555-0142', preferred_time: 'morning', source: 'tour', status: 'new', notes: '', created_at: daysAgo(0, 9) },
+      { name: 'A. Reinholt', email: 'ar@example.com', phone: '+1 (917) 555-0198', preferred_time: 'evening', source: 'tour', status: 'new', notes: 'Asked about Signature tier.', created_at: daysAgo(1, 14) },
+      { name: 'D. Calloway', email: 'dc@example.com', phone: '+1 (646) 555-0104', preferred_time: 'afternoon', source: 'signup', status: 'contacted', notes: 'Sent program overview.', created_at: daysAgo(2, 11) },
+      { name: 'K. Osei', email: 'ko@example.com', phone: '+1 (212) 555-0177', preferred_time: 'morning', source: 'tour', status: 'contacted', notes: '', created_at: daysAgo(4, 8) },
+      { name: 'S. Lindqvist', email: 'sl@example.com', phone: '+1 (929) 555-0123', preferred_time: 'evening', source: 'tour', status: 'toured', notes: 'Tour on Thursday, 19:00.', created_at: daysAgo(6, 16) },
+      { name: 'M. Ferreira', email: 'mf2@example.com', phone: '+1 (718) 555-0166', preferred_time: 'afternoon', source: 'tour', status: 'converted', notes: 'Signed Signature.', created_at: daysAgo(9, 10) },
+      { name: 'T. Nakamura', email: 'tn@example.com', phone: '+1 (212) 555-0118', preferred_time: 'morning', source: 'tour', status: 'declined', notes: 'Timing not right; revisit in Q3.', created_at: daysAgo(12, 9) }
+    ];
+    for (const l of leads) {
+      await run(
+        `INSERT INTO leads (name, email, phone, preferred_time, source, status, notes, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [l.name, l.email, l.phone, l.preferred_time, l.source, l.status, l.notes, l.created_at, l.created_at]
+      );
+    }
+
     console.log('Default data seeded successfully.');
   } catch (err) {
     console.error('Auto-seed failed:', err.message);

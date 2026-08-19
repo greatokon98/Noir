@@ -139,4 +139,26 @@ router.get('/blog/:slug', apiLimiter, async (req, res, next) => {
   }
 });
 
+// GET /api/tiers — published membership tiers, sorted.
+router.get('/tiers', async (req, res, next) => {
+  try {
+    const rows = await all(
+      `SELECT key, name, price_monthly, billing_label, tagline, features_json
+       FROM membership_tiers
+       WHERE published = true
+       ORDER BY sort_order ASC`
+    );
+    res.json(rows.map((r) => ({
+      key: r.key,
+      name: r.name,
+      price_monthly: r.price_monthly,
+      billing_label: r.billing_label,
+      tagline: r.tagline,
+      features: JSON.parse(r.features_json || '[]')
+    })));
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

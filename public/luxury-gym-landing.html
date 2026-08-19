@@ -1308,55 +1308,21 @@ body.nav-open .mobile-menu{opacity:1;visibility:visible}
   var articleClose = document.getElementById('article-close');
   var lastArticleBtn = null;
 
-  var POSTS = {
-    'why-we-test': {
-      meta: 'Training · 12 Jan 2026',
-      title: 'Why we test every six weeks',
-      intro: 'Numbers you can defend beat goals you can\u2019t. A short note on what the retest actually tells us \u2014 and what it doesn\u2019t.',
-      body: [
-        '<p>Every six weeks we put the numbers back on the board: squat, bench, deadlift, chin-up load, and one long conditioning set. Same protocol every time, same time of day, same order. That\u2019s the whole point \u2014 if we change the test, we can\u2019t compare the result.</p>',
-        '<p>What the test is for is answering one question: did the last block work? Not \u201cdid it feel like it worked\u201d. The board is not a motivational tool. It\u2019s how we decide what the next six weeks look like instead of guessing.</p>',
-        '<blockquote>We don\u2019t test to celebrate. We test to know.</blockquote>',
-        '<p>What the test doesn\u2019t tell us: whether your sleep has been good, whether your shoulders are happy, whether the plan fits your life. Those are conversations, not numbers. The board starts the conversation; it doesn\u2019t finish it.</p>',
-        '<p>If a number is flat or moving backwards, we change the plan \u2014 never the test \u2014 and we tell you the truth about it in plain English.</p>'
-      ]
-    },
-    'plunge-skill': {
-      meta: 'Recovery · 5 Jan 2026',
-      title: 'The plunge is a skill',
-      intro: 'Four degrees is not a punishment. It\u2019s a practice with a technique \u2014 and it responds to practice the same way a squat does.',
-      body: [
-        '<p>Most people get in and grit their teeth. That\u2019s not a skill, it\u2019s a fight \u2014 and you can\u2019t win a fight every day. The plunge works when you approach it like a lift: set your stance, control the breath, stay present in the water.</p>',
-        '<p>The drill is simple. Before you enter, three slow exhales. In the water, hold your position \u2014 hands at your sides, chin level \u2014 and count your breaths, not the seconds. The first minute is the hardest. It always is, even for people who have done it for years.</p>',
-        '<blockquote>If you can\u2019t breathe calmly in the water, you haven\u2019t learned the exercise yet.</blockquote>',
-        '<p>We start members at four minutes total: two in, step out, compose, two in. Over weeks the water stays the same \u2014 you change instead. That\u2019s the difference between a skill and a punishment.</p>',
-        '<p>Come to the suite once a week for a month before you judge whether it\u2019s for you. Recovery is trained, not endured.</p>'
-      ]
-    },
-    'food-week': {
-      meta: 'Nutrition · 18 Dec 2025',
-      title: 'Food for your actual week',
-      intro: 'A plan fails when it assumes a perfect week. So we write for the week you actually have \u2014 travel, dinners, the lot.',
-      body: [
-        '<p>Most nutrition plans are written for a person who doesn\u2019t exist \u2014 someone with no meetings at noon, no dinner reservations, no jet lag. Then life happens, the plan breaks, and the client calls it a failure. The plan was the failure. It never met your calendar.</p>',
-        '<p>We start from your actual week, not from a spreadsheet. Where do you eat, who cooks, which days are genuinely unplanned? Then we build the week backward: the non-negotiables first \u2014 protein at the meals you control \u2014 and everything else is planned for flexibility, not perfection.</p>',
-        '<blockquote>A plan that survives a Tuesday is worth more than one that\u2019s perfect on a Sunday.</blockquote>',
-        '<p>If a week doesn\u2019t fit your calendar, we change the plan \u2014 not your life. That\u2019s the job. Food that fits is food you\u2019ll keep.</p>',
-        '<p>Travel, dinners out, back-to-back meetings? We write the playbook for those before they happen, so you\u2019re never making the decision hungry and rushed. The plan should be the easy part of your day, not another thing to think about.</p>'
-      ]
-    }
-  };
+  var POSTS = {};
 
   function renderArticle(id) {
     var p = POSTS[id];
+    if (!p) return;
+    var meta = p.meta || '';
+    var body = Array.isArray(p.body) ? p.body.join('') : (p.body_html || '');
     articleContent.innerHTML =
-      '<p class="article-meta">' + p.meta + '</p>' +
+      '<p class="article-meta">' + meta + '</p>' +
       '<h3 class="article-title" id="article-title">' + p.title + '</h3>' +
-      '<p class="article-intro">' + p.intro + '</p>' +
+      '<p class="article-intro">' + (p.intro || p.excerpt || '') + '</p>' +
       '<hr class="article-rule">' +
-      '<div class="article-body">' + p.body.join('') + '</div>' +
+      '<div class="article-body">' + body + '</div>' +
       '<div class="article-foot">' +
-        '<span>' + p.meta + '</span>' +
+        '<span>' + meta + '</span>' +
         '<a href="#tour" class="text-link">Book a tour <span class="arrow" aria-hidden="true">\u2192</span></a>' +
       '</div>';
   }
@@ -1379,11 +1345,13 @@ body.nav-open .mobile-menu{opacity:1;visibility:visible}
   articleEl.addEventListener('click', function (e) {
     if (e.target === articleEl) closeArticle();
   });
-  document.querySelectorAll('[data-post]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      openArticle(btn.getAttribute('data-post'), btn);
+
+  function bindArticleButtons() {
+    document.querySelectorAll('[data-post]').forEach(function (btn) {
+      btn.onclick = function () { openArticle(btn.getAttribute('data-post'), btn); };
     });
-  });
+  }
+  bindArticleButtons();
 
   /* ----- in-page navigation (CTAs scroll to their target) ----- */
   document.addEventListener('click', function (e) {
@@ -1420,6 +1388,77 @@ body.nav-open .mobile-menu{opacity:1;visibility:visible}
     fetch(API_BASE + '/api/settings', { method: 'GET' })
       .then(function (r) { if (r.ok) return r.json(); throw new Error('settings'); })
       .then(applySettings)
+      .catch(function () {});
+
+    /* ----- dynamic blog posts from /api/blog ----- */
+    fetch(API_BASE + '/api/blog', { method: 'GET' })
+      .then(function (r) { if (r.ok) return r.json(); throw new Error('blog'); })
+      .then(function (posts) {
+        if (!posts || !posts.length) return;
+        posts.forEach(function (p) {
+          var d = new Date(p.published_at);
+          var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+          var meta = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+          POSTS[p.slug] = { meta: meta, title: p.title, intro: p.excerpt, body_html: p.body_html, excerpt: p.excerpt };
+        });
+        var grid = document.querySelector('.journal-grid');
+        if (grid) {
+          var html = '';
+          var classes = ['reveal', 'reveal d1', 'reveal d2'];
+          posts.slice(0, 3).forEach(function (p, i) {
+            var d = new Date(p.published_at);
+            var dtAttr = d.toISOString().slice(0, 10);
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var dateStr = months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear();
+            html += '<article class="post-card ' + (classes[i] || 'reveal') + '" data-od-id="journal-post-' + (i + 1) + '">' +
+              '<div class="post-meta"><time datetime="' + dtAttr + '">' + dateStr + '</time></div>' +
+              '<h3>' + p.title + '</h3>' +
+              '<p>' + p.excerpt + '</p>' +
+              '<button type="button" class="text-link" data-post="' + p.slug + '">Read the note <span class="arrow" aria-hidden="true">\u2192</span></button>' +
+            '</article>';
+          });
+          grid.innerHTML = html;
+          bindArticleButtons();
+          if (typeof IntersectionObserver !== 'undefined') {
+            grid.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+          }
+        }
+      })
+      .catch(function () {});
+
+    /* ----- dynamic membership tiers from /api/tiers ----- */
+    fetch(API_BASE + '/api/tiers', { method: 'GET' })
+      .then(function (r) { if (r.ok) return r.json(); throw new Error('tiers'); })
+      .then(function (tiers) {
+        if (!tiers || !tiers.length) return;
+        var grid = document.querySelector('.tier-grid');
+        if (grid) {
+          var html = '';
+          var classes = ['reveal', 'reveal d1', 'reveal d2'];
+          tiers.forEach(function (t, i) {
+            var priceHtml = t.price_monthly != null
+              ? '<p class="tier-price">$' + t.price_monthly + '<small>' + t.billing_label + '</small></p>'
+              : '<p class="tier-price">' + t.billing_label + '</p>';
+            var features = (t.features || []).map(function (f) { return '<li>' + f + '</li>'; }).join('');
+            var linkHtml = t.key === 'signature'
+              ? '<a href="#tour" class="btn btn-ghost">Request a tour</a>'
+              : '<a href="#tour" class="text-link">Details on request <span class="arrow" aria-hidden="true">\u2192</span></a>';
+            var featured = t.key === 'signature' ? ' tier-featured' : '';
+            html += '<article class="tier' + featured + ' ' + (classes[i] || 'reveal') + '" data-od-id="tier-' + t.key + '">' +
+              (t.key === 'signature' ? '<span class="tier-tag">Most members choose this</span>' : '') +
+              '<p class="tier-name">' + t.name + '</p>' +
+              priceHtml +
+              '<p class="tier-desc">' + t.tagline + '</p>' +
+              '<ul class="tier-list">' + features + '</ul>' +
+              linkHtml +
+            '</article>';
+          });
+          grid.innerHTML = html;
+          if (typeof IntersectionObserver !== 'undefined') {
+            grid.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+          }
+        }
+      })
       .catch(function () {});
   }
 
