@@ -113,6 +113,10 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 - `views/settings.ejs` — "SQLite noir.db" → "PostgreSQL database" reference fixed
 - `server/index.js` seed — `programs_heading` updated to include `<br>` for original design
 - Responsive fixes across all viewports (landing page + admin panel)
+- Frontend hamburger refined (1.5px lines, 20px width, 44px button, tighter nav gap)
+- Admin leads/members tables → stacked cards at ≤640px with data-label pseudo-elements
+- Admin toolbar stacks vertically on mobile
+- Admin tier cards + edit forms responsive on mobile
 
 ## Responsive Breakpoints
 ### Landing Page
@@ -127,7 +131,7 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 | Breakpoint | Behavior |
 |------------|----------|
 | 960px | Rail collapses to 72px icon strip |
-| 640px | Rail becomes slide-out overlay with hamburger toggle, pipe-row stacks, search loses min-width, post-row wraps, buttons allow wrapping, touch targets 44px, flash margin reduces |
+| 640px | Rail becomes slide-out overlay with hamburger toggle, tables→stacked cards, toolbar stacks vertically, pipes stack, buttons allow wrapping, touch targets 44px, flash margin reduces, tier cards tighter, edit forms full-width, panel grids collapse |
 
 ## Key File Locations
 | File | Purpose |
