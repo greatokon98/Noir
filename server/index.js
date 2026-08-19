@@ -48,7 +48,7 @@ const adminCsp = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:'],
       fontSrc: ["'self'"],
@@ -122,11 +122,13 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
 
 app.use('/api', (req, res, next) => {
   const origin = req.headers.origin;
-  if (allowedOrigins.length > 0 && origin && allowedOrigins.indexOf(origin) !== -1) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin');
-  } else if (origin) {
-    return res.status(403).json({ error: 'Cross-origin requests not allowed.' });
+  if (allowedOrigins.length > 0 && origin) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+    } else {
+      return res.status(403).json({ error: 'Cross-origin requests not allowed.' });
+    }
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

@@ -1437,7 +1437,11 @@ body.nav-open .mobile-menu{opacity:1;visibility:visible}
       var selector = SETTINGS_MAP[key];
       if (selector) {
         document.querySelectorAll(selector).forEach(function (el) {
-          el.textContent = value;
+          if (/<[a-z][\s\S]*>/i.test(value)) {
+            el.innerHTML = value;
+          } else {
+            el.textContent = value;
+          }
         });
       }
       if (key === 'phone') {
