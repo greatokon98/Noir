@@ -93,7 +93,7 @@ footer_brand_text, email_alerts
 On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 members, 7 leads.
 
 ## Custom Rules
-1. **No UI changes** — do not modify `views/*.ejs` or `public/admin.css` unless fixing non-visual bugs or responsive issues
+1. **Landing page + admin CSS edits OK** — for responsive fixes and visual improvements
 2. **Original noir.zip reference** — `/var/folders/ct/.../noir-original/luxury-gym-landing.html`
 3. **Landing page JS edits OK** as long as visual appearance stays identical
 4. **Owner info:** Great Okon, great.okon99@gmail.com, +2348103687424
@@ -117,6 +117,11 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 - Admin leads/members tables → stacked cards at ≤640px with data-label pseudo-elements
 - Admin toolbar stacks vertically on mobile
 - Admin tier cards + edit forms responsive on mobile
+- Landing page mobile menu text reduced (clamp(28px,7vw,40px) from clamp(40px,10vw,64px))
+- Hero CTA button smaller on mobile (min-height:44px, padding:12px 18px)
+- Leads page toolbar: chips flex-wrap, search field left + search button right
+- Leads page compact card layout: name+status+date row1, email row2, phone+time+source row3
+- Members page data-label card layout preserved with :has() fallback
 
 ## Responsive Breakpoints
 ### Landing Page
@@ -125,13 +130,13 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 | 1024px | Nav links hide, hamburger shows, nav 76px, cred-grid 2-col, programs/tour single-col |
 | 768px | Hero padding matches nav, scroll-margin reduces, cred-grid stays 2-col |
 | 700px | Container shrinks, hero 640px min, cred-grid 1-col, club-media 280px, all grids single-col, ghost CTA hidden, safe-area-insets |
-| 480px | Buttons larger touch targets (48px min-height), padding reduces |
+| 480px | Buttons: min-height 44px, padding 12px 18px; nav CTA: min-height 40px |
 
 ### Admin Panel
 | Breakpoint | Behavior |
 |------------|----------|
 | 960px | Rail collapses to 72px icon strip |
-| 640px | Rail becomes slide-out overlay with hamburger toggle, tables→stacked cards, toolbar stacks vertically, pipes stack, buttons allow wrapping, touch targets 44px, flash margin reduces, tier cards tighter, edit forms full-width, panel grids collapse |
+| 640px | Rail slide-out overlay, leads compact card layout (3-row), members data-label cards, toolbar stacks vertically (chips flex-wrap, search below chips), pipes stack, buttons allow wrapping, touch targets 44px |
 
 ## Key File Locations
 | File | Purpose |
@@ -141,9 +146,16 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 | `server/index.js:166-280` | Auto-seed data |
 | `server/routes/admin.js:647-706` | SETTING_FIELDS (58 fields) |
 | `server/routes/public.js` | PUBLIC_SETTINGS, `/api/settings` |
+| `public/luxury-gym-landing.html:345-360` | Hamburger button + mobile menu CSS |
+| `public/luxury-gym-landing.html:371-390` | Mobile menu links (clamp(28px,7vw,40px)) |
+| `public/luxury-gym-landing.html:893-896` | 480px breakpoint (button sizing) |
 | `public/luxury-gym-landing.html:1380-1460` | SETTINGS_MAP + applySettings JS |
-| `public/luxury-gym-landing.html:846-900` | Landing page media queries |
-| `public/admin.css:375-430` | Admin media queries (rail collapse, mobile) |
+| `public/admin.css:290-296` | Compact lead row styles (base, all viewports) |
+| `public/admin.css:316-317` | Toolbar-search flex row |
+| `public/admin.css:441-455` | Mobile card layout (leads + members fallback) |
+| `public/admin.css:401-475` | Full 640px media query |
+| `views/leads.ejs:14-28` | Toolbar: chips flex-wrap + search row |
+| `views/leads.ejs:76-101` | Compact lead card structure |
 | `views/partials/rail.ejs` | Admin sidebar with hamburger toggle |
 | `views/partials/foot.ejs` | Rail toggle JS |
 

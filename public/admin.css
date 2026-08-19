@@ -287,6 +287,14 @@ td .cell-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--m
 td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs);width:auto}
 .row-actions{display:flex;gap:var(--space-2);flex-wrap:wrap}
 
+/* compact lead rows */
+.table-wrap .lead-row1{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+.table-wrap .lead-name{flex:1;min-width:0}
+.table-wrap .lead-date{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);letter-spacing:.1em}
+.table-wrap .lead-delete{margin-left:auto}
+.table-wrap .lead-email{font-size:var(--text-xs);color:var(--fg-2)}
+.table-wrap .lead-meta{display:flex;gap:var(--space-4);font-size:var(--text-xs);color:var(--muted);flex-wrap:wrap}
+
 /* chips filter */
 .chips{display:flex;gap:var(--space-2);flex-wrap:wrap}
 .chip{
@@ -305,6 +313,8 @@ td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs
   padding:10px var(--space-4);min-height:44px;
 }
 .toolbar .search:focus{border-color:var(--accent);outline:none;box-shadow:var(--focus-ring)}
+.toolbar-search{display:flex;gap:var(--space-3);flex:1;min-width:200px}
+.toolbar-search .search{flex:1;min-width:0}
 .empty{padding:var(--space-8);text-align:center;color:var(--muted);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;border:1px dashed var(--border);border-radius:var(--radius-md)}
 
 /* membership tier cards */
@@ -432,13 +442,17 @@ td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs
   .table-wrap{overflow-x:visible}
   .table-wrap table{min-width:0;display:block}
   .table-wrap thead{display:none}
-  .table-wrap tbody tr{display:block;padding:var(--space-5);border:1px solid var(--border-soft);border-radius:var(--radius-md);margin-bottom:var(--space-4);background:var(--surface)}
-  .table-wrap td{display:flex;justify-content:space-between;align-items:center;padding:var(--space-2) 0;border-bottom:none;gap:var(--space-3);font-size:var(--text-sm)}
-  .table-wrap td::before{content:attr(data-label);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex:none;min-width:70px}
+  .table-wrap tbody tr{display:block;padding:var(--space-4) var(--space-5);border:1px solid var(--border-soft);border-radius:var(--radius-md);margin-bottom:var(--space-3);background:var(--surface)}
+  .table-wrap td{display:block;padding:0;border-bottom:none}
   .table-wrap td[data-label=""]::before{display:none}
-  .table-wrap td:last-child{border-bottom:none}
-  .table-wrap td:only-child{justify-content:center}
-  .table-wrap .row-actions{justify-content:flex-end}
+  .table-wrap .lead-row1{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+  .table-wrap .lead-name{flex:1;min-width:0}
+  .table-wrap .lead-date{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);letter-spacing:.1em}
+  .table-wrap .lead-delete{margin-left:auto}
+  .table-wrap .lead-email{font-size:var(--text-xs);color:var(--fg-2);padding-top:var(--space-1)}
+  .table-wrap .lead-meta{display:flex;gap:var(--space-4);font-size:var(--text-xs);color:var(--muted);flex-wrap:wrap;padding-top:var(--space-1)}
+  .toolbar-search{min-width:100%}
+  .toolbar-left .btn-primary{width:100%}
 
   /* tier mobile */
   .tier{padding:var(--space-5)}
@@ -448,6 +462,13 @@ td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs
   /* members inline edit */
   .edit-inline form{padding:var(--space-4)}
   .edit-inline form .grid-2,.edit-inline form .grid-3{grid-template-columns:1fr}
+
+  /* members card layout (data-label fallback) */
+  .table-wrap:not(:has(.lead-row1)) td{display:flex;justify-content:space-between;align-items:center;padding:var(--space-2) 0;border-bottom:none;gap:var(--space-3);font-size:var(--text-sm)}
+  .table-wrap:not(:has(.lead-row1)) td::before{content:attr(data-label);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex:none;min-width:70px}
+  .table-wrap:not(:has(.lead-row1)) td:last-child{border-bottom:none}
+  .table-wrap:not(:has(.lead-row1)) td:only-child{justify-content:center}
+  .table-wrap:not(:has(.lead-row1)) .row-actions{justify-content:flex-end}
 
   /* leads create form */
   .panel .grid-2,.panel .grid-3{grid-template-columns:1fr}

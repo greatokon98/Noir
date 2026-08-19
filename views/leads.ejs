@@ -13,14 +13,18 @@
 <div class="view" data-od-id="admin-leads">
   <form class="toolbar" method="get" action="/admin/leads">
     <div class="toolbar-left">
-      <a class="chip<%= filter === 'all' ? ' active' : '' %>" href="/admin/leads">All</a>
-      <% leadStatuses.forEach(function (s) { %>
-      <a class="chip<%= filter === s ? ' active' : '' %>" href="/admin/leads?status=<%= s %>"><%= statusLabel[s] %></a>
-      <% }); %>
-      <input class="search" name="q" placeholder="Search name, email, phone…" value="<%= q %>" aria-label="Search leads">
-      <button class="btn btn-ghost btn-sm" type="submit">Search</button>
+      <div class="chips">
+        <a class="chip<%= filter === 'all' ? ' active' : '' %>" href="/admin/leads">All</a>
+        <% leadStatuses.forEach(function (s) { %>
+        <a class="chip<%= filter === s ? ' active' : '' %>" href="/admin/leads?status=<%= s %>"><%= statusLabel[s] %></a>
+        <% }); %>
+      </div>
+      <div class="toolbar-search">
+        <input class="search" name="q" placeholder="Search name, email, phone…" value="<%= q %>" aria-label="Search leads">
+        <button class="btn btn-ghost btn-sm" type="submit">Search</button>
+      </div>
+      <button class="btn btn-primary" type="button" data-od-id="cta-new-lead" onclick="document.getElementById('lead-create').hidden = !document.getElementById('lead-create').hidden">Add lead</button>
     </div>
-    <button class="btn btn-primary" type="button" data-od-id="cta-new-lead" onclick="document.getElementById('lead-create').hidden = !document.getElementById('lead-create').hidden">Add lead</button>
   </form>
 
   <form class="panel" id="lead-create" method="post" action="/admin/leads" hidden data-od-id="lead-create-form">
@@ -65,17 +69,14 @@
       <table>
         <thead>
           <tr>
-            <th>Name</th><th>Phone</th><th>Preferred time</th><th>Source</th><th>Status</th><th>Received</th><th></th>
+            <th>Name</th><th>Email</th><th>Details</th>
           </tr>
         </thead>
         <tbody>
           <% leads.forEach(function (l) { %>
           <tr>
-            <td data-label=""><strong><%= l.name %></strong><div class="cell-sub"><%= l.email %></div></td>
-            <td data-label="Phone"><div class="cell-sub"><%= l.phone || '—' %></div></td>
-            <td data-label="Time"><%= timeLabel[l.preferred_time] || l.preferred_time %></td>
-            <td data-label="Source"><%= sourceLabel[l.source] || l.source %></td>
-            <td data-label="Status">
+            <td class="lead-row1">
+              <strong class="lead-name"><%= l.name %></strong>
               <form method="post" action="/admin/leads/<%= l.id %>/status" class="status-form">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <select class="status-sel" name="status" onchange="this.form.submit()" aria-label="Status for <%= l.name %>">
@@ -84,13 +85,17 @@
                   <% }); %>
                 </select>
               </form>
-            </td>
-            <td data-label="Date"><%= fmtDate(l.created_at) %></td>
-            <td data-label="">
-              <form method="post" action="/admin/leads/<%= l.id %>/delete" onsubmit="return confirm('Delete this lead?')">
+              <span class="lead-date"><%= fmtDate(l.created_at) %></span>
+              <form method="post" action="/admin/leads/<%= l.id %>/delete" class="lead-delete" onsubmit="return confirm('Delete this lead?')">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                <button class="btn btn-danger btn-sm" type="submit" aria-label="Delete lead">✕</button>
               </form>
+            </td>
+            <td class="lead-email"><%= l.email %></td>
+            <td class="lead-meta">
+              <span class="lead-phone"><%= l.phone || '—' %></span>
+              <span class="lead-time"><%= timeLabel[l.preferred_time] || l.preferred_time %></span>
+              <span class="lead-source"><%= sourceLabel[l.source] || l.source %></span>
             </td>
           </tr>
           <% }); %>
