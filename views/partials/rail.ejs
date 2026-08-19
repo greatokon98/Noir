@@ -1,27 +1,31 @@
 <div class="app">
-  <aside class="rail">
+  <aside class="rail" id="rail">
     <a class="rail-brand" href="/admin/dashboard">
       <strong>NOIR</strong>
       <small>Admin</small>
     </a>
     <nav class="rail-nav" aria-label="Admin">
-      <a class="rail-link<%= activeNav === 'dashboard' ? ' active' : '' %>" href="/admin/dashboard"><span class="rl-num">01</span><span class="rl-label">Dashboard</span></a>
-      <a class="rail-link<%= activeNav === 'leads' ? ' active' : '' %>" href="/admin/leads"><span class="rl-num">02</span><span class="rl-label">Leads</span></a>
-      <a class="rail-link<%= activeNav === 'members' ? ' active' : '' %>" href="/admin/members"><span class="rl-num">03</span><span class="rl-label">Members</span></a>
-      <a class="rail-link<%= activeNav === 'membership' ? ' active' : '' %>" href="/admin/tiers"><span class="rl-num">04</span><span class="rl-label">Membership</span></a>
-      <a class="rail-link<%= activeNav === 'blog' ? ' active' : '' %>" href="/admin/blog"><span class="rl-num">05</span><span class="rl-label">Blog</span></a>
-      <a class="rail-link<%= activeNav === 'settings' ? ' active' : '' %>" href="/admin/settings"><span class="rl-num">06</span><span class="rl-label">Settings</span></a>
+      <a class="rail-link<%= activeNav === 'dashboard' ? ' active' : '' %>" href="/admin/dashboard" aria-label="Dashboard"><span class="rl-num">01</span><span class="rl-label">Dashboard</span></a>
+      <a class="rail-link<%= activeNav === 'leads' ? ' active' : '' %>" href="/admin/leads" aria-label="Leads"><span class="rl-num">02</span><span class="rl-label">Leads</span></a>
+      <a class="rail-link<%= activeNav === 'members' ? ' active' : '' %>" href="/admin/members" aria-label="Members"><span class="rl-num">03</span><span class="rl-label">Members</span></a>
+      <a class="rail-link<%= activeNav === 'membership' ? ' active' : '' %>" href="/admin/tiers" aria-label="Membership"><span class="rl-num">04</span><span class="rl-label">Membership</span></a>
+      <a class="rail-link<%= activeNav === 'blog' ? ' active' : '' %>" href="/admin/blog" aria-label="Blog"><span class="rl-num">05</span><span class="rl-label">Blog</span></a>
+      <a class="rail-link<%= activeNav === 'settings' ? ' active' : '' %>" href="/admin/settings" aria-label="Settings"><span class="rl-num">06</span><span class="rl-label">Settings</span></a>
     </nav>
     <div class="rail-foot">
       <span class="rail-user">Signed in as <b><%= admin.name %></b></span>
       <form method="post" action="/admin/logout">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button class="rail-link" type="submit"><span class="rl-num">→</span><span class="rl-label">Sign out</span></button>
+        <button class="rail-link" type="submit" aria-label="Sign out"><span class="rl-num">→</span><span class="rl-label">Sign out</span></button>
       </form>
     </div>
   </aside>
+  <div class="rail-overlay" id="railOverlay"></div>
   <div class="main">
     <header class="topbar">
+      <button class="mobile-toggle" id="railToggle" aria-label="Toggle navigation">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <div>
         <h1><%= pageTitle %></h1>
         <p class="topbar-sub"><%= pageSub %></p>

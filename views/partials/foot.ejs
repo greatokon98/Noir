@@ -1,5 +1,16 @@
     </div>
   </div>
 </div>
+<script>
+(function(){
+  var toggle=document.getElementById('railToggle');
+  var rail=document.getElementById('rail');
+  var overlay=document.getElementById('railOverlay');
+  if(!toggle||!rail)return;
+  function close(){rail.classList.remove('open')}
+  toggle.addEventListener('click',function(){rail.classList.toggle('open')});
+  if(overlay)overlay.addEventListener('click',close);
+})();
+</script>
 </body>
 </html>

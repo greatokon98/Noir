@@ -72,6 +72,9 @@ body{
   line-height:var(--leading-body);
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  overflow-wrap:break-word;
+  word-break:break-word;
 }
 p{margin:0}
 ul{margin:0;padding:0;list-style:none}
@@ -95,7 +98,7 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:400;letter-spacing:var(-
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .btn-danger{border-color:color-mix(in oklab, var(--danger), transparent 55%);color:var(--danger);background:transparent}
 .btn-danger:hover{border-color:var(--danger);background:color-mix(in oklab, var(--danger), transparent 92%)}
-.btn-sm{padding:8px 14px;min-height:38px;font-size:var(--text-xs)}
+.btn-sm{padding:8px 14px;min-height:40px;font-size:var(--text-xs)}
 .btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
   outline:none;box-shadow:var(--focus-ring);
 }
@@ -281,7 +284,7 @@ tbody tr{transition:background var(--motion-fast) var(--ease-standard)}
 tbody tr:hover{background:color-mix(in oklab, var(--accent), transparent 96%)}
 td strong{color:var(--fg);font-weight:500}
 td .cell-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);margin-top:2px}
-td .status-sel{min-height:34px;padding:4px 30px 4px 10px;font-size:var(--text-xs);width:auto}
+td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs);width:auto}
 .row-actions{display:flex;gap:var(--space-2);flex-wrap:wrap}
 
 /* chips filter */
@@ -330,7 +333,7 @@ td .status-sel{min-height:34px;padding:4px 30px 4px 10px;font-size:var(--text-xs
 .text-link:hover .arrow{transform:translateX(4px)}
 
 /* blog */
-.post-row{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-5) 0;border-bottom:1px solid var(--border-soft)}
+.post-row{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-5) 0;border-bottom:1px solid var(--border-soft);flex-wrap:wrap}
 .post-row:last-child{border-bottom:none}
 .post-main{flex:1;min-width:0}
 .post-main strong{color:var(--fg);font-weight:500;font-size:var(--text-base);display:block}
@@ -372,6 +375,10 @@ td .status-sel{min-height:34px;padding:4px 30px 4px 10px;font-size:var(--text-xs
 .switch input:focus-visible + .track{box-shadow:var(--focus-ring)}
 .switch span{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-2)}
 
+/* mobile toggle — hidden on desktop */
+.mobile-toggle{display:none}
+.rail-overlay{display:none}
+
 @media (max-width:960px){
   .stat-grid{grid-template-columns:repeat(2,1fr)}
   .tier-grid{grid-template-columns:1fr}
@@ -385,6 +392,37 @@ td .status-sel{min-height:34px;padding:4px 30px 4px 10px;font-size:var(--text-xs
   .content{padding:var(--space-5)}
   .topbar{padding:var(--space-5)}
   .toolbar-left{width:100%}
-  .toolbar .search{max-width:none;flex:1}
+  .toolbar .search{max-width:none;flex:1;min-width:0}
   .stat-grid{grid-template-columns:1fr}
+  .flash{margin:var(--space-5) var(--space-5) 0}
+  .pipe-row{grid-template-columns:1fr 40px;gap:var(--space-2)}
+  .pipe-label{grid-column:1/-1}
+  .btn{white-space:normal}
+  .btn-sm{min-height:44px;padding:10px 14px}
+  .status-sel{min-height:44px;padding:8px 30px 8px 10px}
+  .rail{
+    position:fixed;top:0;left:0;bottom:0;z-index:100;
+    width:260px;padding:var(--space-6) var(--space-4);
+    transform:translateX(-100%);
+    transition:transform var(--motion-base) var(--ease-standard);
+  }
+  .rail.open{transform:translateX(0)}
+  .rail .rl-label,.rail small,.rail-brand small,.rail-user{display:inline}
+  .rail-brand{padding-inline:var(--space-2)}
+  .rail-link{justify-content:flex-start}
+  .rail-overlay{
+    display:none;position:fixed;inset:0;z-index:99;
+    background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  }
+  .rail.open~.rail-overlay{display:block}
+  .main{margin-left:0}
+  .topbar{padding:var(--space-4) var(--space-5)}
+  .topbar h1{font-size:clamp(20px,5vw,28px)}
+  .mobile-toggle{
+    display:flex;align-items:center;justify-content:center;
+    width:44px;height:44px;border:none;background:transparent;
+    color:var(--fg);cursor:pointer;border-radius:var(--radius-sm);
+  }
+  .mobile-toggle:hover{background:color-mix(in oklab, var(--accent), transparent 90%)}
+  .chip{padding:10px 14px;min-height:40px}
 }
