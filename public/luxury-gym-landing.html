@@ -1574,6 +1574,10 @@ body.nav-open .mobile-menu{opacity:1;visibility:visible}
 
     function ok() {
       submitBtn.textContent = 'Request received';
+      submitBtn.disabled = true;
+      form.querySelectorAll('.field, .form-note, .hp-field').forEach(function (el) {
+        el.style.display = 'none';
+      });
       success.style.display = 'block';
     }
     function fail() {
