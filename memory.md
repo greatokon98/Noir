@@ -118,7 +118,8 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 - Admin toolbar stacks vertically on mobile
 - Admin tier cards + edit forms responsive on mobile
 - Landing page mobile menu text reduced (clamp(24px,6.5vw,36px) from clamp(40px,10vw,64px))
-- Mobile menu button: white-space:normal, text-align:left, breathing room (space-5 margin)
+- Mobile menu CTA button: font-size:12px, padding:12px 22px, min-height:44px
+- Mobile menu links: padding space-3, white-space:normal on CTA
 - Hero CTA button smaller on mobile (min-height:44px, padding:12px 18px)
 - Leads page toolbar: chips flex-wrap, search field left + search button right
 - Leads page compact card layout: name+status+date row1, email row2, phone+time+source row3
