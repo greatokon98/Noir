@@ -117,11 +117,14 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 - Admin leads/members tables → stacked cards at ≤640px with data-label pseudo-elements
 - Admin toolbar stacks vertically on mobile
 - Admin tier cards + edit forms responsive on mobile
-- Landing page mobile menu text reduced (clamp(28px,7vw,40px) from clamp(40px,10vw,64px))
+- Landing page mobile menu text reduced (clamp(24px,6.5vw,36px) from clamp(40px,10vw,64px))
+- Mobile menu button: white-space:normal, text-align:left, breathing room (space-5 margin)
 - Hero CTA button smaller on mobile (min-height:44px, padding:12px 18px)
 - Leads page toolbar: chips flex-wrap, search field left + search button right
 - Leads page compact card layout: name+status+date row1, email row2, phone+time+source row3
 - Members page data-label card layout preserved with :has() fallback
+- Admin card text overflow fixed: overflow-wrap:break-word on lead-name, lead-email, cell-sub
+- Rail sidebar: 80px width + 18px brand font at 768-960px (iPad safe)
 
 ## Responsive Breakpoints
 ### Landing Page
@@ -135,7 +138,7 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 ### Admin Panel
 | Breakpoint | Behavior |
 |------------|----------|
-| 960px | Rail collapses to 72px icon strip |
+| 960px | Rail collapses to 80px icon strip, brand font shrinks to 18px |
 | 640px | Rail slide-out overlay, leads compact card layout (3-row), members data-label cards, toolbar stacks vertically (chips flex-wrap, search below chips), pipes stack, buttons allow wrapping, touch targets 44px |
 
 ## Key File Locations

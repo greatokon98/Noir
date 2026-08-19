@@ -283,16 +283,16 @@ tr:last-child td{border-bottom:none}
 tbody tr{transition:background var(--motion-fast) var(--ease-standard)}
 tbody tr:hover{background:color-mix(in oklab, var(--accent), transparent 96%)}
 td strong{color:var(--fg);font-weight:500}
-td .cell-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);margin-top:2px}
+td .cell-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);margin-top:2px;overflow-wrap:break-word;word-break:break-word}
 td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs);width:auto}
 .row-actions{display:flex;gap:var(--space-2);flex-wrap:wrap}
 
 /* compact lead rows */
 .table-wrap .lead-row1{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
-.table-wrap .lead-name{flex:1;min-width:0}
-.table-wrap .lead-date{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);letter-spacing:.1em}
+.table-wrap .lead-name{flex:1;min-width:0;overflow-wrap:break-word;word-break:break-word}
+.table-wrap .lead-date{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);letter-spacing:.1em;white-space:nowrap}
 .table-wrap .lead-delete{margin-left:auto}
-.table-wrap .lead-email{font-size:var(--text-xs);color:var(--fg-2)}
+.table-wrap .lead-email{font-size:var(--text-xs);color:var(--fg-2);overflow-wrap:break-word}
 .table-wrap .lead-meta{display:flex;gap:var(--space-4);font-size:var(--text-xs);color:var(--muted);flex-wrap:wrap}
 
 /* chips filter */
@@ -393,9 +393,9 @@ td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs
   .stat-grid{grid-template-columns:repeat(2,1fr)}
   .tier-grid{grid-template-columns:1fr}
   .editor-grid{grid-template-columns:1fr}
-  .rail{width:72px;padding:var(--space-6) var(--space-2)}
+  .rail{width:80px;padding:var(--space-5) var(--space-2)}
   .rail .rl-label,.rail small,.rail-brand small,.rail-user,.rail-foot .rl-num{display:none}
-  .rail-brand{padding-inline:0}
+  .rail-brand{padding-inline:0;font-size:18px}
   .rail-link{justify-content:center}
 }
 @media (max-width:640px){
@@ -464,10 +464,11 @@ td .status-sel{min-height:38px;padding:6px 30px 6px 10px;font-size:var(--text-xs
   .edit-inline form .grid-2,.edit-inline form .grid-3{grid-template-columns:1fr}
 
   /* members card layout (data-label fallback) */
-  .table-wrap:not(:has(.lead-row1)) td{display:flex;justify-content:space-between;align-items:center;padding:var(--space-2) 0;border-bottom:none;gap:var(--space-3);font-size:var(--text-sm)}
+  .table-wrap:not(:has(.lead-row1)) td{display:flex;justify-content:space-between;align-items:center;padding:var(--space-2) 0;border-bottom:none;gap:var(--space-3);font-size:var(--text-sm);min-width:0}
   .table-wrap:not(:has(.lead-row1)) td::before{content:attr(data-label);font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex:none;min-width:70px}
   .table-wrap:not(:has(.lead-row1)) td:last-child{border-bottom:none}
   .table-wrap:not(:has(.lead-row1)) td:only-child{justify-content:center}
+  .table-wrap:not(:has(.lead-row1)) td strong{overflow-wrap:break-word;word-break:break-word}
   .table-wrap:not(:has(.lead-row1)) .row-actions{justify-content:flex-end}
 
   /* leads create form */
