@@ -71,11 +71,11 @@
         <tbody>
           <% leads.forEach(function (l) { %>
           <tr>
-            <td><strong><%= l.name %></strong><div class="cell-sub"><%= l.email %></div></td>
-            <td><div class="cell-sub"><%= l.phone || '—' %></div></td>
-            <td><%= timeLabel[l.preferred_time] || l.preferred_time %></td>
-            <td><%= sourceLabel[l.source] || l.source %></td>
-            <td>
+            <td data-label=""><strong><%= l.name %></strong><div class="cell-sub"><%= l.email %></div></td>
+            <td data-label="Phone"><div class="cell-sub"><%= l.phone || '—' %></div></td>
+            <td data-label="Time"><%= timeLabel[l.preferred_time] || l.preferred_time %></td>
+            <td data-label="Source"><%= sourceLabel[l.source] || l.source %></td>
+            <td data-label="Status">
               <form method="post" action="/admin/leads/<%= l.id %>/status" class="status-form">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <select class="status-sel" name="status" onchange="this.form.submit()" aria-label="Status for <%= l.name %>">
@@ -85,8 +85,8 @@
                 </select>
               </form>
             </td>
-            <td><%= fmtDate(l.created_at) %></td>
-            <td>
+            <td data-label="Date"><%= fmtDate(l.created_at) %></td>
+            <td data-label="">
               <form method="post" action="/admin/leads/<%= l.id %>/delete" onsubmit="return confirm('Delete this lead?')">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button class="btn btn-danger btn-sm" type="submit">Delete</button>

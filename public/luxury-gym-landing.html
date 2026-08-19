@@ -302,7 +302,7 @@ p{text-wrap:pretty}
 }
 .nav-inner{
   display:flex;align-items:center;justify-content:space-between;
-  gap:var(--space-6);
+  gap:var(--space-4);
   height:84px;
 }
 .wordmark{display:flex;flex-direction:column;line-height:1;gap:3px}
@@ -344,7 +344,7 @@ p{text-wrap:pretty}
 .nav-cta{display:flex;align-items:center;gap:var(--space-4)}
 .menu-toggle{
   display:none;
-  width:48px;height:48px;
+  width:44px;height:44px;
   border:1px solid var(--border);
   border-radius:var(--radius-sm);
   background:transparent;
@@ -352,9 +352,9 @@ p{text-wrap:pretty}
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:5px;
+  gap:6px;
 }
-.menu-toggle span{width:18px;height:1px;background:var(--fg);transition:transform var(--motion-fast) var(--ease-standard),opacity var(--motion-fast) var(--ease-standard)}
+.menu-toggle span{width:20px;height:1.5px;background:var(--fg);transition:transform var(--motion-fast) var(--ease-standard),opacity var(--motion-fast) var(--ease-standard)}
 body.nav-open .menu-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 body.nav-open .menu-toggle span:nth-child(2){opacity:0}
 body.nav-open .menu-toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}

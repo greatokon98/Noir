@@ -77,11 +77,11 @@
         <tbody>
           <% members.forEach(function (m) { %>
           <tr>
-            <td><strong><%= m.name %></strong><div class="cell-sub"><%= m.email %><% if (m.phone) { %> · <%= m.phone %><% } %></div></td>
-            <td><%= tierNames[m.tier_id] || m.tier_id %></td>
-            <td><span class="badge <%= memberBadge[m.status] || 'b-neutral' %>"><%= memberLabel[m.status] || m.status %></span></td>
-            <td><%= m.joined_at %></td>
-            <td>
+            <td data-label=""><strong><%= m.name %></strong><div class="cell-sub"><%= m.email %><% if (m.phone) { %> · <%= m.phone %><% } %></div></td>
+            <td data-label="Tier"><%= tierNames[m.tier_id] || m.tier_id %></td>
+            <td data-label="Status"><span class="badge <%= memberBadge[m.status] || 'b-neutral' %>"><%= memberLabel[m.status] || m.status %></span></td>
+            <td data-label="Joined"><%= m.joined_at %></td>
+            <td data-label="">
               <div class="row-actions">
                 <details class="edit-inline">
                   <summary class="btn btn-ghost btn-sm" style="list-style:none">Edit</summary>
