@@ -46,7 +46,7 @@ A members-only luxury fitness club website with:
 │   └── partials/ (head, foot, rail)
 ├── public/
 │   ├── luxury-gym-landing.html  → Landing page (static + inline JS)
-│   ├── admin.css                → Admin styles (DO NOT EDIT)
+│   ├── admin.css                → Admin styles
 │   └── assets/                  → Images (hero, club, coaches)
 ```
 
@@ -93,10 +93,11 @@ footer_brand_text, email_alerts
 On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 members, 7 leads.
 
 ## Custom Rules
-1. **No UI changes** — do not modify `views/*.ejs` or `public/admin.css` unless fixing non-visual bugs
+1. **No UI changes** — do not modify `views/*.ejs` or `public/admin.css` unless fixing non-visual bugs or responsive issues
 2. **Original noir.zip reference** — `/var/folders/ct/.../noir-original/luxury-gym-landing.html`
 3. **Landing page JS edits OK** as long as visual appearance stays identical
 4. **Owner info:** Great Okon, great.okon99@gmail.com, +2348103687424
+5. **Always update memory.md** when making changes
 
 ## Completed Work
 - Security fixes (31 items)
@@ -106,12 +107,27 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 - Vercel deployment (server.js re-export, vercel.json, process.exit removal, embedded schema, session fixes)
 - Auto-seed on cold start
 - Dynamic content from admin (58 fields, SETTINGS_MAP, applySettings with innerHTML)
-- CSP fixes (landing page + admin inline JS)
+- CSP fixes (landing page + admin inline JS — `unsafe-inline` for both)
 - CORS middleware fix (allow when ALLOWED_ORIGINS not configured)
+- `applySettings` uses `innerHTML` to preserve HTML tags (e.g. `<br>` in programs heading)
+- `views/settings.ejs` — "SQLite noir.db" → "PostgreSQL database" reference fixed
+- `server/index.js` seed — `programs_heading` updated to include `<br>` for original design
+- Responsive fixes across all viewports (landing page + admin panel)
 
-## Remaining Minor Items
-- POSTS hardcoded fallback blog content is empty `{}` — original had full article body text
-- Email alerts toggle exists but SMTP not fully wired for lead notifications
+## Responsive Breakpoints
+### Landing Page
+| Breakpoint | Behavior |
+|------------|----------|
+| 1024px | Nav links hide, hamburger shows, nav 76px, cred-grid 2-col, programs/tour single-col |
+| 768px | Hero padding matches nav, scroll-margin reduces, cred-grid stays 2-col |
+| 700px | Container shrinks, hero 640px min, cred-grid 1-col, club-media 280px, all grids single-col, ghost CTA hidden, safe-area-insets |
+| 480px | Buttons larger touch targets (48px min-height), padding reduces |
+
+### Admin Panel
+| Breakpoint | Behavior |
+|------------|----------|
+| 960px | Rail collapses to 72px icon strip |
+| 640px | Rail becomes slide-out overlay with hamburger toggle, pipe-row stacks, search loses min-width, post-row wraps, buttons allow wrapping, touch targets 44px, flash margin reduces |
 
 ## Key File Locations
 | File | Purpose |
@@ -122,3 +138,11 @@ On first cold start, seeds: 1 admin, 3 tiers, 59 settings, 3 blog posts, 5 membe
 | `server/routes/admin.js:647-706` | SETTING_FIELDS (58 fields) |
 | `server/routes/public.js` | PUBLIC_SETTINGS, `/api/settings` |
 | `public/luxury-gym-landing.html:1380-1460` | SETTINGS_MAP + applySettings JS |
+| `public/luxury-gym-landing.html:846-900` | Landing page media queries |
+| `public/admin.css:375-430` | Admin media queries (rail collapse, mobile) |
+| `views/partials/rail.ejs` | Admin sidebar with hamburger toggle |
+| `views/partials/foot.ejs` | Rail toggle JS |
+
+## Remaining Minor Items
+- POSTS hardcoded fallback blog content is empty `{}` — original had full article body text
+- Email alerts toggle exists but SMTP not fully wired for lead notifications
