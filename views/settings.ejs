@@ -39,8 +39,8 @@
   </form>
 
   <div class="panel" style="border-color:color-mix(in oklab, var(--danger), transparent 60%)">
-    <div class="panel-head"><h3>Data</h3><span class="panel-meta">SQLite noir.db</span></div>
-    <p class="view-desc" style="margin-bottom:var(--space-4)">Leads, members, tiers, posts and settings all live in the single <b>noir.db</b> file. Back it up by copying the file while the server is stopped.</p>
+    <div class="panel-head"><h3>Data</h3><span class="panel-meta">PostgreSQL database</span></div>
+    <p class="view-desc" style="margin-bottom:var(--space-4)">Leads, members, tiers, posts and settings all live in the <b>Neon PostgreSQL</b> database. Data is managed through the admin panel and public API.</p>
     <form method="post" action="/admin/logout">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button class="btn btn-ghost btn-sm" type="submit">Sign out</button>

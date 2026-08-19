@@ -210,7 +210,7 @@ ensureSchema().then(async () => {
       club_spec_1_value: '4°C', club_spec_1_label: 'Cold plunge',
       club_spec_2_value: '12 m', club_spec_2_label: 'Open turf',
       club_spec_3_value: '6', club_spec_3_label: 'Sauna capacity',
-      programs_heading: 'Three disciplines. No clutter.',
+      programs_heading: 'Three disciplines.<br>One standard.',
       programs_intro: 'No class timetable. No obstacles between you and the floor. Just three spaces, each designed for one thing done properly.',
       program_1_title: 'Strength & Performance',
       program_1_desc: 'Twelve platforms, Eleiko barbells, calibrated plates. A floor built for lifters who know what they are doing.',
