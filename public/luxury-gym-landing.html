@@ -1369,18 +1369,89 @@ body.nav-open .mobile-menu{opacity:1;visibility:visible}
   var API_BASE = window.NOIR_API_BASE || '';
 
   /* ----- editable copy from /api/settings (page keeps baked-in values if the API is down) ----- */
+  var SETTINGS_MAP = {
+    hero_eyebrow:    '[data-od-id="hero-eyebrow"]',
+    hero_heading:    '[data-od-id="hero-heading"]',
+    hero_lead:       '.hero-inner .lead',
+    cta_primary_label: '.hero-inner .btn-primary',
+    phone:           '[data-od-id="phone"]',
+    email:           '[data-od-id="email"]',
+    hours_club:      '[data-od-id="hours-club"]',
+    hours_concierge: '[data-od-id="hours-concierge"]',
+    cred_1_value:    '[data-od-id="cred-est"] .cred-num',
+    cred_1_label:    '[data-od-id="cred-est"] .cred-label',
+    cred_2_value:    '[data-od-id="cred-sqft"] .cred-num',
+    cred_2_label:    '[data-od-id="cred-sqft"] .cred-label',
+    cred_3_value:    '[data-od-id="cred-cap"] .cred-num',
+    cred_3_label:    '[data-od-id="cred-cap"] .cred-label',
+    cred_4_value:    '[data-od-id="cred-ratio"] .cred-num',
+    cred_4_label:    '[data-od-id="cred-ratio"] .cred-label',
+    club_heading:    '[data-od-id="club-heading"]',
+    club_body:       '.club-copy p:nth-child(1)',
+    club_spec_1_value: '.specs .spec:nth-child(1) b',
+    club_spec_1_label: '.specs .spec:nth-child(1) span',
+    club_spec_2_value: '.specs .spec:nth-child(2) b',
+    club_spec_2_label: '.specs .spec:nth-child(2) span',
+    club_spec_3_value: '.specs .spec:nth-child(3) b',
+    club_spec_3_label: '.specs .spec:nth-child(3) span',
+    programs_heading: '[data-od-id="programs-heading"]',
+    programs_intro:  '.programs-head .section-intro',
+    program_1_title: '[data-od-id="program-strength"] h3',
+    program_1_desc:  '[data-od-id="program-strength"] p',
+    program_2_title: '[data-od-id="program-recovery"] h3',
+    program_2_desc:  '[data-od-id="program-recovery"] p',
+    program_3_title: '[data-od-id="program-nutrition"] h3',
+    program_3_desc:  '[data-od-id="program-nutrition"] p',
+    coaches_heading: '[data-od-id="coaches-heading"]',
+    coaches_intro:   '.coaches .section-intro',
+    coach_1_name:    '[data-od-id="coach-marcus"] h3',
+    coach_1_role:    '[data-od-id="coach-marcus"] .coach-role',
+    coach_1_bio:     '[data-od-id="coach-marcus"] .coach-cred',
+    coach_2_name:    '[data-od-id="coach-elena"] h3',
+    coach_2_role:    '[data-od-id="coach-elena"] .coach-role',
+    coach_2_bio:     '[data-od-id="coach-elena"] .coach-cred',
+    coach_3_name:    '[data-od-id="coach-david"] h3',
+    coach_3_role:    '[data-od-id="coach-david"] .coach-role',
+    coach_3_bio:     '[data-od-id="coach-david"] .coach-cred',
+    membership_heading: '[data-od-id="membership-heading"]',
+    testimonials_heading: '[data-od-id="testimonials-heading"]',
+    testimonial_1_text: '[data-od-id="quote-1"] p',
+    testimonial_1_attr: '[data-od-id="quote-1"] figcaption',
+    testimonial_2_text: '[data-od-id="quote-2"] p',
+    testimonial_2_attr: '[data-od-id="quote-2"] figcaption',
+    testimonial_3_text: '[data-od-id="quote-3"] p',
+    testimonial_3_attr: '[data-od-id="quote-3"] figcaption',
+    journal_heading: '[data-od-id="journal-heading"]',
+    journal_intro:   '.journal .section-intro',
+    tour_heading:    '[data-od-id="tour-heading"]',
+    tour_body:       '.tour-copy p:nth-child(1)',
+    tour_address:    '.tour-contact span',
+    footer_brand_text: '.footer-brand p'
+  };
+
   function applySettings(settings) {
     if (!settings || typeof settings !== 'object') return;
     Object.keys(settings).forEach(function (key) {
       var value = settings[key];
       if (value == null || value === '') return;
-      document.querySelectorAll('[data-settings-key="' + key + '"]').forEach(function (el) {
-        el.textContent = value;
-        if (el.href) {
-          if (key === 'phone') el.href = 'tel:' + String(value).replace(/[^\d+]/g, '');
-          if (key === 'email') el.href = 'mailto:' + value;
-        }
-      });
+      var selector = SETTINGS_MAP[key];
+      if (selector) {
+        document.querySelectorAll(selector).forEach(function (el) {
+          el.textContent = value;
+        });
+      }
+      if (key === 'phone') {
+        document.querySelectorAll('[data-settings-key="phone"]').forEach(function (el) {
+          el.textContent = value;
+          el.href = 'tel:' + String(value).replace(/[^\d+]/g, '');
+        });
+      }
+      if (key === 'email') {
+        document.querySelectorAll('[data-settings-key="email"]').forEach(function (el) {
+          el.textContent = value;
+          el.href = 'mailto:' + value;
+        });
+      }
     });
   }
 

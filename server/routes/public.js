@@ -67,8 +67,30 @@ router.post('/leads', apiLimiter, async (req, res) => {
 
 // GET /api/settings — editable copy that renders on the landing page.
 const PUBLIC_SETTINGS = [
-  'hero_eyebrow', 'cta_primary_label', 'cta_tour_label',
-  'phone', 'email', 'hours_club', 'hours_concierge'
+  'hero_eyebrow', 'hero_heading', 'hero_lead',
+  'cta_primary_label', 'cta_tour_label',
+  'phone', 'email', 'hours_club', 'hours_concierge',
+  'cred_1_value', 'cred_1_label', 'cred_2_value', 'cred_2_label',
+  'cred_3_value', 'cred_3_label', 'cred_4_value', 'cred_4_label',
+  'club_heading', 'club_body',
+  'club_spec_1_value', 'club_spec_1_label',
+  'club_spec_2_value', 'club_spec_2_label',
+  'club_spec_3_value', 'club_spec_3_label',
+  'programs_heading', 'programs_intro',
+  'program_1_title', 'program_1_desc', 'program_2_title', 'program_2_desc',
+  'program_3_title', 'program_3_desc',
+  'coaches_heading', 'coaches_intro',
+  'coach_1_name', 'coach_1_role', 'coach_1_bio',
+  'coach_2_name', 'coach_2_role', 'coach_2_bio',
+  'coach_3_name', 'coach_3_role', 'coach_3_bio',
+  'membership_heading',
+  'testimonials_heading',
+  'testimonial_1_text', 'testimonial_1_attr',
+  'testimonial_2_text', 'testimonial_2_attr',
+  'testimonial_3_text', 'testimonial_3_attr',
+  'journal_heading', 'journal_intro',
+  'tour_heading', 'tour_body', 'tour_address',
+  'footer_brand_text'
 ];
 
 router.get('/settings', async (req, res, next) => {
